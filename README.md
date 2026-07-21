@@ -2,6 +2,16 @@
 
 Search the web from a phone that can text but has no data. A computer at home watches for questions, looks each one up in free web sources and texts the answer back. I built it for trips with a bar of signal or a satellite and no data, so `tide Tofino` from a trailhead comes back as a normal SMS.
 
+## Ways to Reach It
+
+Texting your Twilio number is the simplest. The computer polls Twilio's API for new texts, so there's no webhook or public address to set up, and listing your number in `ALLOWED_SENDERS` turns it on. That works from anything that sends ordinary SMS:
+
+- An iPhone 14 or later on iOS 18, through Messages via satellite in Canada and the US. It sends SMS to non-Apple numbers like a Twilio one when your carrier supports SMS by satellite, and replies come back the same way, though you need to be outside with a clear view of the sky.
+- Rogers Satellite in Canada or T-Mobile's T-Satellite in the US, which carry plain SMS to any number.
+- A Garmin inReach, texting the Twilio number as it would any phone, and the answer comes back to the device as a normal reply. The inReach has no number of its own though, and Garmin's forums say its texts go out from whichever Garmin number the gateway picks, so it can change between messages. Each of those has to be in `ALLOWED_SENDERS`, and a text from one that isn't gets ignored, with its number in the log.
+
+It also reads an email inbox over IMAP, logging in with an app password. Gmail works with just the address and password, and any other provider needs `IMAP_HOST` and `SMTP_HOST`. A text to that address through your carrier's SMS-to-email gateway (from something like `6045551234@txt.bell.ca`) gets its answer texted to `PHONE_TO` when Twilio is set up, or emailed back to the gateway when it isn't, and plain email from an allowed address gets an email back in the same thread. It only opens mail from the allowed senders and leaves everything else unread, though a separate address for this is still the simplest. Several carriers have closed their gateways (Rogers in 2023, AT&T in 2025), so that part depends on yours. Don't send inReach messages to the email address, as they come from `no.reply.inreach@garmin.com` and the only way back is a form on Garmin's site, so it skips them. Text the Twilio number from the inReach instead.
+
 ## Commands
 
 The first word picks the source and the rest is the question. Anything else is a web search.
@@ -31,12 +41,23 @@ Copy `config.example.txt` to `config.txt` and fill it in, or set the same names 
 
 ```
 remote-search ask "tide Tofino"   # one answer in the terminal, no accounts needed
+remote-search run                 # answer texts and mail until Ctrl-C
+remote-search run --once          # answer what's waiting and exit, for cron
+remote-search run --dry-run       # log replies instead of sending them
 ```
+
+At startup it skips mail that's already waiting, unless you pass `--catch-up`. Texts to the Twilio number that arrive while it's stopped get answered once it's back, and the ones it has handled are kept in `STATE_FILE`. A dry run leaves all of that alone, so mail stays unread and `STATE_FILE` isn't written.
+
+On an inReach, `MAX_SMS_CHARS=160` keeps every reply to one message, which is about what Garmin passes through. A preset message like `weather here` is worth setting up too, since typing on the device is slow.
 
 ```
 python -m pip install -e ".[dev]"
 python -m pytest                  # offline tests
 ```
+
+## What It Won't Do
+
+It won't start without `ALLOWED_SENDERS`, and it only ever answers the sender or `PHONE_TO`. Every reply is billed, so `MAX_REPLIES_PER_POLL` caps them, and questions past it wait for a later poll. A US Twilio number needs A2P 10DLC registration before it can text US phones, and Canadian numbers bought since March 2025 need registering too. Twilio handles STOP and HELP itself on North American numbers, so a text of just STOP blocks every reply to that phone until it texts START. The scraped engines all block automated searches after a burst now and then, and once every one of them has, the reply says the web search isn't answering. The mail check trusts the From header, which can be forged, so the allowed senders are a filter and not a lock.
 
 ## License
 

@@ -12,6 +12,8 @@ dependencies = [
   "ddgs>=9.0",
   # zoneinfo needs this on Windows, which has no time zone database of its own.
   "tzdata; sys_platform == 'win32'",
+  # The Twilio client is only imported to run or check it, so ask starts fast.
+  "twilio>=9.0",
 ]
 
 [project.optional-dependencies]
