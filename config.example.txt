@@ -1,0 +1,39 @@
+# Copy this to config.txt and fill it in. config.txt is gitignored so the passwords in it
+# stay out of the repo, and an environment variable with the same name wins over any line here.
+
+# Who can ask, as phone numbers in +16045551234 form, email addresses and bare domains,
+# separated by commas. It has to be set, as nobody else ever gets an answer. A phone
+# number here turns on texting the Twilio number, and a carrier's SMS-to-email gateway
+# domain (like txt.bell.ca) covers texts sent to the email address.
+ALLOWED_SENDERS=+16045551234,txt.bell.ca,me@example.com
+
+# Twilio, from https://console.twilio.com. Leave the number's "A message comes in"
+# webhook empty, since this checks for new texts itself.
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=your_auth_token
+TWILIO_PHONE_FROM=+15551234567
+# Where answers to gateway mail are texted, when Twilio is set up.
+PHONE_TO=+16045551234
+
+# Email, read over IMAP with an app password (Google Account > Security > App passwords).
+# The servers are known for Gmail, and anything else needs IMAP_HOST and SMTP_HOST. A separate address just for this
+# is simplest, though it only ever opens mail from ALLOWED_SENDERS.
+MAIL_ADDRESS=
+MAIL_PASSWORD=
+MAIL_FOLDER=INBOX
+IMAP_HOST=
+SMTP_HOST=
+# Gateway mail like 6045551234@txt.bell.ca gets its answer as a text, and so do the
+# addresses or domains here. Everything else gets an email back.
+REPLY_BY_SMS=
+
+# The Google News edition, as a country code like GB, or CA:fr for the French one in Canada.
+NEWS_REGION=CA
+
+# Limits, shown with their defaults. MAX_SMS_CHARS can go up to 1600, which is as long
+# as Twilio will send, and 160 suits an inReach. Past the reply cap, questions wait
+# for a later poll.
+MAX_SMS_CHARS=300
+MAX_REPLIES_PER_POLL=10
+POLL_INTERVAL=5
+STATE_FILE=remote-search-state.json

@@ -1,0 +1,29 @@
+# Secrets, which should never be committed
+config.txt
+config.txt.tmp
+# The Gmail API login from before IMAP, which an old clone may still have
+credentials.json
+token.json
+token.pickle
+# Messages already answered and unsent pages, which name who asked what
+remote-search-state.json
+remote-search-state.json.tmp
+remote-search-state.json.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
