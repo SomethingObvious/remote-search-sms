@@ -18,6 +18,7 @@ The first word picks the source and the rest is the question. Anything else is a
 
 | Text | Answer |
 | --- | --- |
+| `weather <place>`, `forecast <place>` | Open-Meteo, now or over 3 days, plus Environment Canada alerts |
 | `news [topic]` | Google News headlines |
 | `define`, `wiki`, `so` | Wiktionary, Wikipedia, Stack Overflow |
 | `more`, `help`, `help <word>` | the rest of a long answer, the command list, one command's details |
