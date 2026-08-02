@@ -61,4 +61,4 @@ def table() -> dict[str, Command]:
 
 
 # Imported last, as each of them needs command() above, and in the order help lists them.
-from . import weather, tides, news, reference  # noqa: E402, F401, I001
+from . import weather, tides, avalanche, news, reference  # noqa: E402, F401, I001

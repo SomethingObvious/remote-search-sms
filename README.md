@@ -20,6 +20,7 @@ The first word picks the source and the rest is the question. Anything else is a
 | --- | --- |
 | `weather <place>`, `forecast <place>` | Open-Meteo, now or over 3 days, plus Environment Canada alerts |
 | `tide <place>` | next highs and lows at the nearest Canadian Hydrographic Service station |
+| `avy <place>` | Avalanche Canada danger ratings and problems |
 | `news [topic]` | Google News headlines |
 | `define`, `wiki`, `so` | Wiktionary, Wikipedia, Stack Overflow |
 | `more`, `help`, `help <word>` | the rest of a long answer, the command list, one command's details |
