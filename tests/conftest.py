@@ -19,6 +19,7 @@ import pytest
 from ddgs.exceptions import DDGSException
 
 from remotesearch import net, places, search
+from remotesearch.commands import tides
 from remotesearch.reply import DEFAULT_SMS_CHARS, Answerer
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -46,6 +47,7 @@ ddgs.DDGS = _no_network  # type: ignore[misc, assignment]
 def _fresh() -> Iterator[None]:
     """Clear the per-run caches and the search cooldowns, and make every wait instant."""
     places.geocode.cache_clear()
+    tides.stations.cache_clear()
     search._resting.clear()
     net._last_call.clear()
     with patch("time.sleep"):
