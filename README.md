@@ -19,11 +19,13 @@ The first word picks the source and the rest is the question. Anything else is a
 | Text | Answer |
 | --- | --- |
 | `weather <place>`, `forecast <place>` | Open-Meteo, now or over 3 days, plus Environment Canada alerts |
+| `sun <place>`, `time <place>` | sunrise and sunset, or the local time |
 | `tide <place>` | next highs and lows at the nearest Canadian Hydrographic Service station |
 | `avy <place>` | Avalanche Canada danger ratings and problems |
 | `road <highway or BC town>` | DriveBC closures and events, like `road coquihalla` |
 | `drive <place> to <place>` | distance and time from OSRM, with no traffic |
 | `news [topic]` | Google News headlines |
+| `hours <business> <town>` | opening hours, address and phone from OpenStreetMap |
 | `define`, `wiki`, `so` | Wiktionary, Wikipedia, Stack Overflow |
 | `more`, `help`, `help <word>` | the rest of a long answer, the command list, one command's details |
 
