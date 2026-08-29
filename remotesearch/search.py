@@ -1,4 +1,4 @@
-"""Web search through the engines the ddgs package scrapes."""
+"""Web search through Brave when there's a key, then the engines the ddgs package scrapes."""
 
 import logging
 import time
@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from . import net
 from .net import SourceError
-from .text import looks_relevant
+from .text import inline_text, looks_relevant
 
 logger = logging.getLogger("remotesearch")
 
@@ -58,6 +58,33 @@ def ddgs_search(query: str) -> list[Hit]:
             ]
     _resting.update(dict.fromkeys(ready, time.monotonic() + COOLDOWN))
     raise down
+
+
+def brave(query: str, key: str) -> list[Hit]:
+    """Top five results from the Brave Search API."""
+    data = net.get_json(
+        "https://api.search.brave.com/res/v1/web/search",
+        "Brave Search",
+        params={"q": query, "count": 5},
+        headers={"Accept": "application/json", "X-Subscription-Token": key},
+    )
+    results = ((data or {}).get("web") or {}).get("results") or []
+    # Brave marks the matched words with <strong>, and those tags sit mid-sentence.
+    return [
+        Hit(inline_text(r.get("title", "")), inline_text(r.get("description", "")), r["url"])
+        for r in results
+        if isinstance(r, dict) and r.get("url")
+    ]
+
+
+def web_results(query: str, brave_key: str = "") -> list[Hit]:
+    """Brave's API when there's a key, and the ddgs backends without one or when it fails."""
+    if brave_key:
+        try:
+            return brave(query, brave_key)
+        except SourceError as exc:
+            logger.warning("Brave Search failed (%s), so trying the other engines", exc.why)
+    return ddgs_search(query)
 
 
 def best_hit(query: str, hits: list[Hit]) -> Hit | None:

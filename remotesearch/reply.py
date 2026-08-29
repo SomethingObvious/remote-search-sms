@@ -12,7 +12,7 @@ from .commands.news import DEFAULT_REGION, edition
 from .commands.reference import duckduckgo, wikipedia
 from .net import SourceError
 from .places import place_words
-from .search import ddgs_search, snippet_answer
+from .search import snippet_answer, web_results
 from .state import State
 from .text import MAX_QUERY_CHARS, STOPWORDS, paginate, sms_text, truncate, words
 
@@ -131,7 +131,7 @@ class Answerer:
         return NO_RESULT_TEXT.format(target=truncate(query, 60))
 
     def search(self, query: str) -> list[Any]:
-        return ddgs_search(query)
+        return web_results(query, self.config.get("BRAVE_API_KEY", ""))
 
     def site_search(self, site: str, query: str) -> str | None:
         """The best result for ``query`` from one site."""

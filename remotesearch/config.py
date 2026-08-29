@@ -53,6 +53,13 @@ SETTINGS = (
         "Addresses or domains whose mail gets its answer as a text. Gateway numbers always do.",
     ),
     Setting(
+        "BRAVE_API_KEY",
+        "Search",
+        "Brave Search key",
+        "Asked before the free engines, which block automated searches now and then.",
+        secret=True,
+    ),
+    Setting(
         "NEWS_REGION", "Search", "News edition", "A country code like CA, or CA:fr for French."
     ),
     Setting(

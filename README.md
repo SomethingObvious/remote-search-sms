@@ -33,7 +33,7 @@ The news comes from the Google News edition in `NEWS_REGION`, which is a country
 
 It says so when it doesn't know. A result only counts when it overlaps what you asked, and the reply names its source, so a near miss is easy to spot.
 
-Web searches go through the ddgs package, which scrapes DuckDuckGo and moves on to the other engines it supports while DuckDuckGo is blocking.
+Web searches go through the ddgs package, which scrapes DuckDuckGo and moves on to the other engines it supports while DuckDuckGo is blocking. With `BRAVE_API_KEY` set, Brave's search API gets asked before any of them, and it's the dependable option as it's a real API rather than a scraped page.
 
 ## Setup
 
@@ -64,7 +64,7 @@ python -m pytest                  # offline tests
 
 ## What It Won't Do
 
-It won't start without `ALLOWED_SENDERS`, and it only ever answers the sender or `PHONE_TO`. Every reply is billed, so `MAX_REPLIES_PER_POLL` caps them, and questions past it wait for a later poll. A US Twilio number needs A2P 10DLC registration before it can text US phones, and Canadian numbers bought since March 2025 need registering too. Twilio handles STOP and HELP itself on North American numbers, so a text of just STOP blocks every reply to that phone until it texts START. The scraped engines all block automated searches after a burst now and then, and once every one of them has, the reply says the web search isn't answering. The mail check trusts the From header, which can be forged, so the allowed senders are a filter and not a lock.
+It won't start without `ALLOWED_SENDERS`, and it only ever answers the sender or `PHONE_TO`. Every reply is billed, so `MAX_REPLIES_PER_POLL` caps them, and questions past it wait for a later poll. A US Twilio number needs A2P 10DLC registration before it can text US phones, and Canadian numbers bought since March 2025 need registering too. Twilio handles STOP and HELP itself on North American numbers, so a text of just STOP blocks every reply to that phone until it texts START. The scraped engines all block automated searches after a burst now and then, and once every one of them has, the reply says the web search isn't answering. A Brave key is the fix if that keeps happening. The mail check trusts the From header, which can be forged, so the allowed senders are a filter and not a lock.
 
 ## License
 

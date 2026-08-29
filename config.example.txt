@@ -27,6 +27,9 @@ SMTP_HOST=
 # addresses or domains here. Everything else gets an email back.
 REPLY_BY_SMS=
 
+# Optional. With a key the web search asks the Brave Search API first, and only goes
+# to DuckDuckGo and the other free engines when Brave fails.
+BRAVE_API_KEY=
 # The Google News edition, as a country code like GB, or CA:fr for the French one in Canada.
 NEWS_REGION=CA
 

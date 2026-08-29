@@ -1,5 +1,7 @@
+import os
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -25,6 +27,25 @@ def test_setting_rejects_bad_numbers() -> None:
     for bad in ("0", "-3", "ten", "1.5"):
         with pytest.raises(SystemExit, match=repr(bad).replace(".", r"\.")):
             setting({"POLL_INTERVAL": bad}, "POLL_INTERVAL", 5)
+
+
+def test_load_config_lets_the_environment_win() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "config.txt"
+        # Notepad can save with a byte order mark, which mustn't end up in the first key.
+        path.write_text(
+            "MAIL_FOLDER=Texts\n# PHONE_TO=+1\nPOLL_INTERVAL = 9\nAI_MODEL=m\n",
+            encoding="utf-8-sig",
+        )
+        with patch.dict(os.environ, {"POLL_INTERVAL": "30", "BRAVE_API_KEY": "b"}, clear=True):
+            config = load_config(str(path))
+    assert config.pop("_CONFIG_DIR") == str(Path(tmp).resolve())
+    assert config == {
+        "MAIL_FOLDER": "Texts",
+        "POLL_INTERVAL": "30",
+        "AI_MODEL": "m",
+        "BRAVE_API_KEY": "b",
+    }
 
 
 def test_save_config_keeps_comments_and_order() -> None:
