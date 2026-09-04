@@ -35,7 +35,7 @@ def command(
 
     The function gets the rest of the text after the command word, and returns the
     answer or None when it has none, which sends the text on to a web search. A second
-    parameter, if it has one, gets the Answerer, for its settings and search.
+    parameter, if it has one, gets the Answerer, for its settings, search and model.
     """
 
     def register(run: Callable[..., str | None]) -> Callable[..., str | None]:

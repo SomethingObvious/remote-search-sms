@@ -27,6 +27,15 @@ SMTP_HOST=
 # addresses or domains here. Everything else gets an email back.
 REPLY_BY_SMS=
 
+# Optional answers written by a language model from the search results. The key's
+# prefix picks the provider (Anthropic, OpenAI, OpenRouter, Groq, Google or xAI), and
+# AI_BASE_URL with AI_MODEL points it at any OpenAI-compatible server instead, like a
+# local Ollama at http://localhost:11434/v1, which needs no key.
+AI_API_KEY=
+AI_PROVIDER=
+AI_MODEL=
+AI_BASE_URL=
+
 # Optional. With a key the web search asks the Brave Search API first, and only goes
 # to DuckDuckGo and the other free engines when Brave fails.
 BRAVE_API_KEY=

@@ -33,6 +33,8 @@ The news comes from the Google News edition in `NEWS_REGION`, which is a country
 
 It says so when it doesn't know. A result only counts when it overlaps what you asked, and the reply names its source, so a near miss is easy to spot.
 
+With `AI_API_KEY` set, a model writes one short answer from the search results and says "I don't know" when they don't cover it. The key's prefix picks Anthropic, OpenAI, OpenRouter, Groq, Google or xAI, and `AI_BASE_URL` with `AI_MODEL` points it at any OpenAI-compatible server, like a local Ollama. The results are handed to it as untrusted text, and whatever it writes only goes back to whoever asked.
+
 Web searches go through the ddgs package, which scrapes DuckDuckGo and moves on to the other engines it supports while DuckDuckGo is blocking. With `BRAVE_API_KEY` set, Brave's search API gets asked before any of them, and it's the dependable option as it's a real API rather than a scraped page.
 
 ## Setup

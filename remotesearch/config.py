@@ -52,6 +52,20 @@ SETTINGS = (
         "Answer by text",
         "Addresses or domains whose mail gets its answer as a text. Gateway numbers always do.",
     ),
+    Setting("AI_API_KEY", "AI Answers", "API key", "Its prefix picks the provider.", secret=True),
+    Setting(
+        "AI_PROVIDER",
+        "AI Answers",
+        "Provider",
+        "anthropic, openai, openrouter, groq, google or xai.",
+    ),
+    Setting("AI_MODEL", "AI Answers", "Model", "Leave empty for a small, cheap default."),
+    Setting(
+        "AI_BASE_URL",
+        "AI Answers",
+        "Base URL",
+        "For a local server, like http://localhost:11434/v1.",
+    ),
     Setting(
         "BRAVE_API_KEY",
         "Search",

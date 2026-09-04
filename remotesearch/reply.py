@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import Any
 
-from . import commands
+from . import ai, commands
 from .commands.news import DEFAULT_REGION, edition
 from .commands.reference import duckduckgo, wikipedia
 from .net import SourceError
@@ -64,13 +64,14 @@ def attempt(source: Callable[[str], Any], arg: str) -> tuple[Any, SourceError | 
 class Answerer:
     """Turns one question into one answer, with no idea who asked or how it'll be sent.
 
-    Commands that take a second parameter get this, for ``config``, ``limit``,
-    ``search()`` and ``site_search()``.
+    Commands that take a second parameter get this, for ``config``, ``model``,
+    ``limit``, ``search()`` and ``site_search()``.
     """
 
     def __init__(self, config: dict[str, str] | None = None, limit: int = DEFAULT_SMS_CHARS):
         self.config = config or {}
         self.limit = limit
+        self.model = ai.model_from_config(self.config)
         try:
             edition(self.config.get("NEWS_REGION") or DEFAULT_REGION)
         except ValueError as exc:
@@ -122,6 +123,10 @@ class Answerer:
         hits = results[-1][0] or []
         downs = [down for _, down in results if down]
 
+        if self.model and (reference or hits):
+            written = ai.answer_from_results(self.model, query, hits, reference, self.limit)
+            if written:
+                return f"ai: {written}"
         found = reference[0] if reference else snippet_answer(query, hits)
         if found:
             return f"web: {found}"
@@ -134,8 +139,12 @@ class Answerer:
         return web_results(query, self.config.get("BRAVE_API_KEY", ""))
 
     def site_search(self, site: str, query: str) -> str | None:
-        """The best result for ``query`` from one site."""
+        """The best result for ``query`` from one site, written by the model when there is one."""
         hits = self.search(f"site:{site} {query}")
+        if self.model and hits:
+            written = ai.answer_from_results(self.model, query, hits, [], self.limit)
+            if written:
+                return written
         return snippet_answer(query, hits)
 
     def pages(self, query: str, channel: str = "sms") -> list[str]:
