@@ -215,6 +215,24 @@ def test_ai_failing_falls_back_to_the_plain_answer(ddg) -> None:
         assert Answerer(AI_CONFIG).answer("boil water").startswith("web: How Long to Boil Water")
 
 
+def test_translate_uses_mymemory_or_the_model() -> None:
+    url = "https://api.mymemory.translated.net/"
+    with fake_web({url: load("mymemory_de.json")}) as calls:
+        assert answer("translate where is the train station to german") == (
+            "translate: German: Wo ist der Bahnhof"
+        )
+    assert calls[0][1]["q"] == "where is the train station"
+    with fake_web({}) as calls, patch.object(ai, "translate", return_value="Wo ist der Bahnhof?"):
+        assert Answerer(AI_CONFIG).answer("translate where is the station to german") == (
+            "translate: German: Wo ist der Bahnhof?"
+        )
+    assert calls == []
+    assert answer("translate hello") == (
+        "translate: Text it as translate <words> to <language>, like 'translate where is the "
+        "bus to french'."
+    )
+
+
 def test_drive_needs_to_between_the_places() -> None:
     assert answer("drive Vancouver") == (
         "drive: Text it as drive <place> to <place>, like 'drive Vancouver to Whistler'."
