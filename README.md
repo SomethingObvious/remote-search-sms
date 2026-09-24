@@ -28,9 +28,10 @@ The first word picks the source and the rest is the question. Anything else is a
 | `news [topic]`, `score <team>` | Google News headlines, ESPN scores |
 | `hours <business> <town>` | opening hours, address and phone from OpenStreetMap |
 | `define`, `wiki`, `so` | Wiktionary, Wikipedia, Stack Overflow |
+| `reddit`, `quora`, `youtube`, `site <domain>` | a web search of that one site |
 | `more`, `help`, `help <word>` | the rest of a long answer, the command list, one command's details |
 
-The news comes from the Google News edition in `NEWS_REGION`, which is a country code like `GB` for the English edition there, or `CA:fr` for the French one in Canada. It's `CA` unless you set it. Replies are folded into GSM-7 and cut into 300-character pages, since one character outside GSM-7 bills a reply at more than twice as many segments.
+The news comes from the Google News edition in `NEWS_REGION`, which is a country code like `GB` for the English edition there, or `CA:fr` for the French one in Canada. It's `CA` unless you set it. Reddit's API is closed to personal apps and Quora has none, so those answers are the top search result's title and snippet rather than the thread itself. Replies are folded into GSM-7 and cut into 300-character pages, since one character outside GSM-7 bills a reply at more than twice as many segments.
 
 It says so when it doesn't know. A result only counts when it overlaps what you asked, and the reply names its source, so a near miss is easy to spot.
 

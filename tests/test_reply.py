@@ -215,6 +215,44 @@ def test_ai_failing_falls_back_to_the_plain_answer(ddg) -> None:
         assert Answerer(AI_CONFIG).answer("boil water").startswith("web: How Long to Boil Water")
 
 
+def test_site_commands_search_one_site(ddg) -> None:
+    ddg.rows = [
+        {
+            "title": "Best tent for the West Coast Trail? : r/WestCoastTrail",
+            "body": "A light freestanding tent with a good fly.",
+            "href": "https://www.reddit.com/r/WestCoastTrail/comments/abc/",
+        }
+    ]
+    with fake_web({}):
+        assert answer("reddit best tent for the west coast trail") == (
+            "reddit: Best tent for the West Coast Trail? : r/WestCoastTrail: A light "
+            "freestanding tent with a good fly."
+        )
+        answer("site mec.ca return policy")
+        answer("youtube bear hang")
+        answer("quora why is the sky blue")
+    # A site with no matching result falls back to a plain web search, as other commands do.
+    assert [q for q in ddg.queries if q.startswith("site:")] == [
+        "site:reddit.com best tent for the west coast trail",
+        "site:mec.ca return policy",
+        "site:youtube.com bear hang",
+        "site:quora.com why is the sky blue",
+    ]
+    assert ddg.queries[2] == "mec.ca return policy"
+
+
+def test_site_command_needs_a_domain(ddg) -> None:
+    with fake_web({}):
+        answer("site nodomain boil water")
+    assert ddg.queries == ["nodomain boil water"]
+
+
+def test_site_command_uses_ai_when_it_can(ddg) -> None:
+    with fake_web({}), patch.object(ai, "ask", return_value="Most say a freestanding tent."):
+        reply = Answerer(AI_CONFIG).answer("reddit best tent for the west coast trail")
+    assert reply == "reddit: Most say a freestanding tent."
+
+
 def test_translate_uses_mymemory_or_the_model() -> None:
     url = "https://api.mymemory.translated.net/"
     with fake_web({url: load("mymemory_de.json")}) as calls:
