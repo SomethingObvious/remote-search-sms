@@ -15,8 +15,9 @@ TWILIO_PHONE_FROM=+15551234567
 # Where answers to gateway mail are texted, when Twilio is set up.
 PHONE_TO=+16045551234
 
-# Email, read over IMAP with an app password (Google Account > Security > App passwords).
-# The servers are known for Gmail, and anything else needs IMAP_HOST and SMTP_HOST. A separate address just for this
+# Email, read over IMAP with an app password (Google Account > Security > App passwords,
+# or appleid.apple.com for iCloud). The servers are known for Gmail, iCloud, Fastmail and
+# Yahoo, and anything else needs IMAP_HOST and SMTP_HOST. A separate address just for this
 # is simplest, though it only ever opens mail from ALLOWED_SENDERS.
 MAIL_ADDRESS=
 MAIL_PASSWORD=

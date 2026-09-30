@@ -40,11 +40,13 @@ SETTINGS = (
         "MAIL_PASSWORD",
         "Email",
         "App password",
-        "An app password, not your normal one. Gmail makes them in account security.",
+        "An app password, not your normal one. Gmail and iCloud make them in account security.",
         secret=True,
     ),
     Setting("MAIL_FOLDER", "Email", "Folder", "The folder or Gmail label to read. INBOX if empty."),
-    Setting("IMAP_HOST", "Email", "IMAP server", "Only needed outside Gmail."),
+    Setting(
+        "IMAP_HOST", "Email", "IMAP server", "Only needed outside Gmail, iCloud, Fastmail or Yahoo."
+    ),
     Setting("SMTP_HOST", "Email", "SMTP server", "As host:port, like smtp.example.com:587."),
     Setting(
         "REPLY_BY_SMS",

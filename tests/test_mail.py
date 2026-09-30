@@ -19,6 +19,7 @@ from remotesearch.mail import (
     reply_to,
     search_terms,
     sender_address,
+    servers,
 )
 
 ALLOWED = {"txt.bell.ca", "me@example.com"}
@@ -156,6 +157,15 @@ def smtp() -> Any:
     FakeSMTP.sent, FakeSMTP.used = [], []
     with patch("smtplib.SMTP_SSL", FakeSMTP), patch("smtplib.SMTP", FakeSMTP):
         yield FakeSMTP
+
+
+def test_servers_for_known_and_other_mailboxes() -> None:
+    assert servers({"MAIL_ADDRESS": "me@Gmail.com"}) == ("imap.gmail.com", "smtp.gmail.com:465")
+    assert servers({"MAIL_ADDRESS": "me@icloud.com"})[1] == "smtp.mail.me.com:587"
+    custom = {"MAIL_ADDRESS": "me@example.org", "IMAP_HOST": "i.example.org", "SMTP_HOST": "s:587"}
+    assert servers(custom) == ("i.example.org", "s:587")
+    with pytest.raises(SystemExit, match=r"no known mail servers for example\.org"):
+        servers({"MAIL_ADDRESS": "me@example.org"})
 
 
 def test_the_server_filters_by_sender() -> None:

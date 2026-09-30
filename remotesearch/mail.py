@@ -27,6 +27,11 @@ logger = logging.getLogger("remotesearch")
 KNOWN_SERVERS = {
     "gmail.com": ("imap.gmail.com", "smtp.gmail.com:465"),
     "googlemail.com": ("imap.gmail.com", "smtp.gmail.com:465"),
+    "icloud.com": ("imap.mail.me.com", "smtp.mail.me.com:587"),
+    "me.com": ("imap.mail.me.com", "smtp.mail.me.com:587"),
+    "mac.com": ("imap.mail.me.com", "smtp.mail.me.com:587"),
+    "fastmail.com": ("imap.fastmail.com", "smtp.fastmail.com:465"),
+    "yahoo.com": ("imap.mail.yahoo.com", "smtp.mail.yahoo.com:465"),
 }
 # A carrier's SMS-to-email gateway sends from the phone's own number, like
 # 6045551234@txt.bell.ca, so mail from an address like that gets its answer by SMS.
