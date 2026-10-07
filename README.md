@@ -68,7 +68,7 @@ python -m pytest                  # offline tests
 
 ## What It Won't Do
 
-It won't start without `ALLOWED_SENDERS`, and it only ever answers the sender or `PHONE_TO`. Every reply is billed, so `MAX_REPLIES_PER_POLL` caps them, and questions past it wait for a later poll. A US Twilio number needs A2P 10DLC registration before it can text US phones, and Canadian numbers bought since March 2025 need registering too. Twilio handles STOP and HELP itself on North American numbers, so a text of just STOP blocks every reply to that phone until it texts START. The scraped engines all block automated searches after a burst now and then, and once every one of them has, the reply says the web search isn't answering. A Brave key is the fix if that keeps happening. The mail check trusts the From header, which can be forged, so the allowed senders are a filter and not a lock.
+It won't start without `ALLOWED_SENDERS`, and it only ever answers the sender or `PHONE_TO`. Every reply is billed, so `MAX_REPLIES_PER_POLL` and `MAX_REPLIES_PER_HOUR` (30 by default, and kept across restarts) cap them, and questions past a cap wait for a later poll. A US Twilio number needs A2P 10DLC registration before it can text US phones, and Canadian numbers bought since March 2025 need registering too. Twilio handles STOP and HELP itself on North American numbers, so a text of just STOP blocks every reply to that phone until it texts START. The scraped engines all block automated searches after a burst now and then, and once every one of them has, the reply says the web search isn't answering. A Brave key is the fix if that keeps happening. The mail check trusts the From header, which can be forged, so the allowed senders are a filter and not a lock.
 
 ## License
 

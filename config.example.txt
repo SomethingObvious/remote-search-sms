@@ -44,9 +44,10 @@ BRAVE_API_KEY=
 NEWS_REGION=CA
 
 # Limits, shown with their defaults. MAX_SMS_CHARS can go up to 1600, which is as long
-# as Twilio will send, and 160 suits an inReach. Past the reply cap, questions wait
-# for a later poll.
+# as Twilio will send, and 160 suits an inReach. Past either reply cap, questions wait
+# for a later poll, and the hourly count is kept in STATE_FILE so a restart can't reset it.
 MAX_SMS_CHARS=300
 MAX_REPLIES_PER_POLL=10
+MAX_REPLIES_PER_HOUR=30
 POLL_INTERVAL=5
 STATE_FILE=remote-search-state.json

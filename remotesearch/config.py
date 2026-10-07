@@ -82,6 +82,9 @@ SETTINGS = (
         "MAX_SMS_CHARS", "Limits", "Characters per text", "300 by default. 160 for an inReach."
     ),
     Setting("MAX_REPLIES_PER_POLL", "Limits", "Replies per poll", "10 by default."),
+    Setting(
+        "MAX_REPLIES_PER_HOUR", "Limits", "Replies per hour", "30 by default, kept across restarts."
+    ),
     Setting("POLL_INTERVAL", "Limits", "Seconds between checks", "5 by default."),
     Setting("STATE_FILE", "Limits", "State file", "remote-search-state.json by default."),
 )

@@ -6,7 +6,7 @@ import threading
 import time
 from collections import deque
 from collections.abc import Iterable
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from functools import partial
 from pathlib import Path
 from typing import Any, Protocol
@@ -29,12 +29,49 @@ logger = logging.getLogger("remotesearch")
 
 TWILIO_MAX_CHARS = 1600  # Twilio rejects a longer body outright
 DEFAULT_MAX_REPLIES = 10  # per poll, and every reply is a billed SMS
+DEFAULT_MAX_PER_HOUR = 30
 DEFAULT_INTERVAL = 5
 MOST_BACKOFF = 300
 
 
 class Inbox(Protocol):
     def fetch(self) -> Iterable[Incoming]: ...
+
+
+class HourlyCap:
+    """Replies sent in the last hour across every inbox, kept in the state file.
+
+    The per-poll cap alone lets a steady trickle of texts run up the bill, and a
+    restart would reset a count kept in memory.
+    """
+
+    def __init__(self, state: State, most: int) -> None:
+        self.state = state
+        self.most = most
+        self.warned = False
+
+    def _recent(self) -> list[str]:
+        cutoff = datetime.now(UTC) - timedelta(hours=1)
+        sent = [t for t in self.state.data.get("sent", []) if datetime.fromisoformat(t) > cutoff]
+        self.state.data["sent"] = sent
+        return sent
+
+    def reached(self) -> bool:
+        if len(self._recent()) < self.most:
+            self.warned = False
+            return False
+        if not self.warned:  # once per stretch at the cap, not once per poll
+            logger.warning(
+                "Sent %d replies in the last hour, which is MAX_REPLIES_PER_HOUR, so new "
+                "questions wait until the hour has room again",
+                self.most,
+            )
+            self.warned = True
+        return True
+
+    def count(self) -> None:
+        self._recent().append(datetime.now(UTC).isoformat())
+        self.state.save()
 
 
 class Poller:
@@ -82,6 +119,9 @@ class Poller:
         self.max_replies = setting(config, "MAX_REPLIES_PER_POLL", DEFAULT_MAX_REPLIES)
         self.state = State(beside_config(config, "STATE_FILE", DEFAULT_STATE_FILE), dry_run=dry_run)
         self.responder = Responder(Answerer(config, self.limit), self.state)
+        per_hour = setting(config, "MAX_REPLIES_PER_HOUR", DEFAULT_MAX_PER_HOUR)
+        # Dry runs send nothing, so they don't use up the hour's replies.
+        self.hourly = None if dry_run else HourlyCap(self.state, per_hour)
         self.recent: deque[dict[str, Any]] = deque(maxlen=50)
         self.inboxes: list[Inbox] = []
         self._closers: list[Any] = []
@@ -138,11 +178,13 @@ class Poller:
     def poll(self) -> int:
         """Answer what's waiting in every inbox, up to the caps, and return how many went out.
 
-        The cap is checked before the next message is taken, so whatever's left stays
+        Both caps are checked before the next message is taken, so whatever's left stays
         unread or unseen, and gets its answer on a later poll.
         """
         replied = 0
         for inbox in self.inboxes:
+            if self.hourly and self.hourly.reached():
+                return replied
             for incoming in inbox.fetch():
                 replied += self.answer(incoming)
                 if replied >= self.max_replies:
@@ -150,6 +192,8 @@ class Poller:
                         "Sent %d replies this poll, which is the cap, so the rest wait",
                         self.max_replies,
                     )
+                    return replied
+                if self.hourly and self.hourly.reached():
                     return replied
         return replied
 
@@ -172,6 +216,8 @@ class Poller:
                 "sent": sent,
             }
         )
+        if sent and self.hourly:
+            self.hourly.count()
         return sent
 
     def run(self, stop: threading.Event | None = None) -> None:
