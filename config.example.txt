@@ -43,6 +43,11 @@ BRAVE_API_KEY=
 # The Google News edition, as a country code like GB, or CA:fr for the French one in Canada.
 NEWS_REGION=CA
 
+# Command words to turn off, like avy,road,tide if you're nowhere near BC. A word that's
+# off goes to the web search instead. Every .py file in PLUGINS_DIR adds commands.
+COMMANDS_OFF=
+PLUGINS_DIR=plugins
+
 # Limits, shown with their defaults. MAX_SMS_CHARS can go up to 1600, which is as long
 # as Twilio will send, and 160 suits an inReach. Past either reply cap, questions wait
 # for a later poll, and the hourly count is kept in STATE_FILE so a restart can't reset it.

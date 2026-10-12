@@ -79,6 +79,13 @@ SETTINGS = (
         "NEWS_REGION", "Search", "News edition", "A country code like CA, or CA:fr for French."
     ),
     Setting(
+        "COMMANDS_OFF",
+        "Commands",
+        "Turned off",
+        "Command words to turn off, like avy,road,tide outside BC.",
+    ),
+    Setting("PLUGINS_DIR", "Commands", "Plugin folder", "Every .py file here adds commands."),
+    Setting(
         "MAX_SMS_CHARS", "Limits", "Characters per text", "300 by default. 160 for an inReach."
     ),
     Setting("MAX_REPLIES_PER_POLL", "Limits", "Replies per poll", "10 by default."),

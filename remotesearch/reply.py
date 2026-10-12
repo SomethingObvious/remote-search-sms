@@ -10,6 +10,7 @@ from typing import Any
 from . import ai, commands
 from .commands.news import DEFAULT_REGION, edition
 from .commands.reference import duckduckgo, wikipedia
+from .config import beside_config, word_list
 from .net import SourceError
 from .places import place_words
 from .search import snippet_answer, web_results
@@ -20,6 +21,7 @@ logger = logging.getLogger("remotesearch")
 
 DEFAULT_SMS_CHARS = 300  # two GSM-7 segments hold 306
 EMAIL_MAX_CHARS = 4000  # an email has room for the whole answer, so it isn't paged
+DEFAULT_PLUGINS = "plugins"
 
 HELP_WORDS = {"help", "?", "commands"}
 EMPTY_TEXT = "Your text came through empty. Text help to see the commands."
@@ -76,7 +78,8 @@ class Answerer:
             edition(self.config.get("NEWS_REGION") or DEFAULT_REGION)
         except ValueError as exc:
             raise SystemExit(str(exc)) from None
-        self.commands = commands.table()
+        plugins = beside_config(self.config, "PLUGINS_DIR", DEFAULT_PLUGINS)
+        self.commands = commands.table(word_list(self.config, "COMMANDS_OFF"), plugins)
 
     def help_text(self) -> str:
         listed = dict.fromkeys(c.words[0] for c in self.commands.values() if c.listed)
