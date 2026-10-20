@@ -64,6 +64,7 @@ On an inReach, `MAX_SMS_CHARS=160` keeps every reply to one message, which is ab
 ```
 python -m pip install -e ".[dev]"
 python -m pytest                  # offline tests
+python tests/live_smoke.py        # one real question to each keyless source
 ```
 
 ## Your Own Commands
