@@ -1,7 +1,8 @@
-"""The remote-search command: ask and run."""
+"""The remote-search command: ask, run and check."""
 
 import argparse
 import logging
+import sys
 
 from .config import load_config, setting
 
@@ -27,13 +28,18 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--config", default=argparse.SUPPRESS, help="the config file")
     common.add_argument("--verbose", action="store_true", default=argparse.SUPPRESS)
-    sub = parser.add_subparsers(dest="action", metavar="{ask,run}", required=True)
+    sub = parser.add_subparsers(dest="action", metavar="{ask,check,run}", required=True)
 
     ask = sub.add_parser(
         "ask", parents=[common], help="answer one question here, no accounts needed"
     )
     ask.add_argument("question", nargs="+")
     ask.add_argument("--chars", type=positive, help="characters per text, MAX_SMS_CHARS if not set")
+
+    check = sub.add_parser(
+        "check", parents=[common], help="try every account and key in the config"
+    )
+    check.add_argument("--text", action="store_true", help="also send a test text to PHONE_TO")
 
     run = sub.add_parser("run", parents=[common], help="answer texts and mail until Ctrl-C")
     run.add_argument("--once", action="store_true", help="answer what's waiting and exit, for cron")
@@ -49,6 +55,23 @@ def ask(config: dict[str, str], question: str, chars: int | None) -> None:
 
     limit = chars or setting(config, "MAX_SMS_CHARS", DEFAULT_SMS_CHARS)
     print("\n\n".join(Answerer(config, limit).pages(question)))
+
+
+def check(config: dict[str, str], text: bool) -> int:
+    from .checks import run_all, send_test_text
+
+    results = run_all(config)
+    failed = any(r.ok is False for r in results)
+    for result in results:
+        mark = {True: "ok  ", False: "FAIL", None: "--  "}[result.ok]
+        print(f"{mark} {result.name}: {result.detail}")
+    if text:
+        try:
+            print(f"ok   Test text: sent to {send_test_text(config)}")
+        except ValueError as exc:
+            print(f"FAIL Test text: {exc}")
+            failed = True
+    return 1 if failed else 0
 
 
 def run(config: dict[str, str], args: argparse.Namespace) -> None:
@@ -86,5 +109,7 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.action == "ask":
         ask(config, " ".join(args.question), args.chars)
+    elif args.action == "check":
+        sys.exit(check(config, args.text))
     elif args.action == "run":
         run(config, args)

@@ -52,6 +52,7 @@ Copy `config.example.txt` to `config.txt` and fill it in, or set the same names 
 
 ```
 remote-search ask "tide Tofino"   # one answer in the terminal, no accounts needed
+remote-search check --text        # try every account and text PHONE_TO once
 remote-search run                 # answer texts and mail until Ctrl-C
 remote-search run --once          # answer what's waiting and exit, for cron
 remote-search run --dry-run       # log replies instead of sending them
