@@ -33,6 +33,13 @@ def config_file(lines: dict[str, str]) -> Iterator[Path]:
             yield path
 
 
+def test_help_runs(capsys: pytest.CaptureFixture) -> None:
+    with pytest.raises(SystemExit) as done:
+        main(["--help"])
+    assert done.value.code == 0
+    assert "setup" in capsys.readouterr().out
+
+
 def test_ask_prints_the_answer_with_no_accounts(capsys: pytest.CaptureFixture) -> None:
     with config_file({}) as path, fake_web({DICTIONARY: ALBEDO}):
         main(["ask", "define", "albedo", "--config", str(path)])
@@ -129,3 +136,10 @@ def test_config_can_come_before_the_action() -> None:
     assert (args.config, args.verbose) == ("D:/trip/config.txt", True)
     args = parse_args(["run", "--config", "D:/trip/config.txt"])
     assert (args.config, args.verbose) == ("D:/trip/config.txt", False)
+
+
+def test_no_action_is_an_error(capsys: pytest.CaptureFixture) -> None:
+    with pytest.raises(SystemExit) as done:
+        main([])
+    assert done.value.code == 2
+    assert "required: {setup,ask,check,run}" in capsys.readouterr().err

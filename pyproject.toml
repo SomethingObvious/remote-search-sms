@@ -33,6 +33,9 @@ packages = ["remotesearch", "remotesearch.commands"]
 [tool.setuptools.dynamic]
 version = { attr = "remotesearch.__version__" }
 
+[tool.setuptools.package-data]
+remotesearch = ["ui.html", "static/*"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 

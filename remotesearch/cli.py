@@ -1,4 +1,4 @@
-"""The remote-search command: ask, run and check."""
+"""The remote-search command: ask, run, check and setup."""
 
 import argparse
 import logging
@@ -28,7 +28,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--config", default=argparse.SUPPRESS, help="the config file")
     common.add_argument("--verbose", action="store_true", default=argparse.SUPPRESS)
-    sub = parser.add_subparsers(dest="action", metavar="{ask,check,run}", required=True)
+    sub = parser.add_subparsers(dest="action", metavar="{setup,ask,check,run}", required=True)
+
+    setup = sub.add_parser("setup", parents=[common], help="open the setup page in a browser")
+    setup.add_argument("--port", type=positive, default=8765, help="8765 unless it's taken")
+    setup.add_argument("--no-browser", action="store_true", help="print the address instead")
 
     ask = sub.add_parser(
         "ask", parents=[common], help="answer one question here, no accounts needed"
@@ -113,3 +117,7 @@ def main(argv: list[str] | None = None) -> None:
         sys.exit(check(config, args.text))
     elif args.action == "run":
         run(config, args)
+    elif args.action == "setup":
+        from .ui import serve
+
+        serve(args.config, args.port, open_browser=not args.no_browser)

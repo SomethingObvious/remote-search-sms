@@ -46,9 +46,10 @@ It needs Python 3.11 or newer.
 ```
 python -m venv .venv
 .venv/bin/pip install -e .        # .venv\Scripts\pip on Windows
+remote-search setup
 ```
 
-Copy `config.example.txt` to `config.txt` and fill it in, or set the same names as environment variables, which win over the file.
+That opens a page on `127.0.0.1` that fills in `config.txt` for you, checks each account as you go, shows a question's answer the way your phone would get it (with its characters and billed segments) and starts it. It's the same as editing `config.txt` by hand from `config.example.txt`, and the same names work as environment variables, which win over the file.
 
 ```
 remote-search ask "tide Tofino"   # one answer in the terminal, no accounts needed
@@ -70,7 +71,7 @@ python tests/live_smoke.py        # one real question to each keyless source
 
 ## Your Own Commands
 
-Every `.py` file in `plugins` is loaded at start, and `plugins/example.py` shows the whole thing. A command is a function with the `@command("word")` decorator that gets the rest of the text and returns the answer, or `None` to send it on to a web search. Put words in `COMMANDS_OFF` (like `quora,youtube`) to turn built-in ones off, so a text starting with one of them is searched for instead.
+Every `.py` file in `plugins` is loaded at start, and `plugins/example.py` shows the whole thing. A command is a function with the `@command("word")` decorator that gets the rest of the text and returns the answer, or `None` to send it on to a web search. Put words in `COMMANDS_OFF` (like `quora,youtube`) to turn built-in ones off, so a text starting with one of them is searched for instead. The Commands page of the setup does the same with a checkbox.
 
 ## What It Won't Do
 

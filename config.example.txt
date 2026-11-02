@@ -1,5 +1,6 @@
-# Copy this to config.txt and fill it in. config.txt is gitignored so the passwords in it
-# stay out of the repo, and an environment variable with the same name wins over any line here.
+# Copy this to config.txt and fill it in, or run `remote-search setup` and do it from a
+# page in your browser. config.txt is gitignored so the passwords in it stay out of the
+# repo, and an environment variable with the same name wins over any line here.
 
 # Who can ask, as phone numbers in +16045551234 form, email addresses and bare domains,
 # separated by commas. It has to be set, as nobody else ever gets an answer. A phone
