@@ -1,0 +1,39 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "event": "Flood Warning",
+    "status": "Actual",
+    "messageType": "Alert",
+    "severity": "Severe",
+    "headline": "Flood Warning issued November 3 at 9:30AM EST until November 4 at 9:30AM EST by NWS Melbourne FL",
+    "areaDesc": "Brevard, FL; Indian River, FL; Martin, FL; St. Lucie, FL",
+    "effective": "2026-11-03T09:30:00-05:00",
+    "expires": "2026-11-04T09:30:00-05:00",
+    "ends": "2026-11-04T09:30:00-05:00",
+    "senderName": "NWS Melbourne FL"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "event": "Rip Current Statement",
+    "status": "Actual",
+    "messageType": "Update",
+    "severity": "Moderate",
+    "headline": "Rip Current Statement issued November 3 at 1:28AM EST until November 5 at 2:00AM EST by NWS Melbourne FL",
+    "areaDesc": "Coastal Volusia; Coastal Indian River; Mainland Northern Brevard; Northern Brevard Barrier Islands; Mainland Southern Brevard; Southern Brevard Barrier Islands",
+    "effective": "2026-11-03T01:28:00-05:00",
+    "expires": "2026-11-03T19:30:00-05:00",
+    "ends": "2026-11-05T02:00:00-05:00",
+    "senderName": "NWS Melbourne FL"
+   }
+  }
+ ],
+ "title": "Current watches, warnings, and advisories for 28 N, 80.6 W",
+ "updated": "2026-11-03T16:45:05+00:00"
+}

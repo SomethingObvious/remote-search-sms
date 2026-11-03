@@ -147,8 +147,8 @@ class App:
     def check(self) -> dict[str, Any]:
         return {"results": [r.as_dict() for r in run_all(self.config())]}
 
-    def test_text(self) -> dict[str, Any]:
-        return {"sent": send_test_text(self.config())}
+    def test_text(self, via: str) -> dict[str, Any]:
+        return {"sent": send_test_text(self.config(), via)}
 
     def start(self, dry_run: bool) -> dict[str, Any]:
         with self.lock:
@@ -207,7 +207,7 @@ ACTIONS = {
     "/api/save": lambda app, body: app.save(body.get("changes") or {}),
     "/api/ask": lambda app, body: app.ask(str(body.get("question", ""))),
     "/api/check": lambda app, _: app.check(),
-    "/api/test-text": lambda app, _: app.test_text(),
+    "/api/test-text": lambda app, body: app.test_text(str(body.get("via") or "")),
     "/api/start": lambda app, body: app.start(bool(body.get("dryRun"))),
     "/api/stop": lambda app, _: app.stop(),
 }

@@ -1,0 +1,325 @@
+{
+ "count": 40,
+ "stations": [
+  {
+   "id": "9447130",
+   "name": "SEATTLE (Madison St.), Elliott Bay",
+   "lat": 47.60263888888889,
+   "lng": -122.3393055555556,
+   "state": "WA",
+   "type": "R"
+  },
+  {
+   "id": "9447110",
+   "name": "Lockheed Shipyard, Harbor Island",
+   "lat": 47.585,
+   "lng": -122.362,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9447029",
+   "name": "Duwamish Waterway, Eighth Ave. South",
+   "lat": 47.535,
+   "lng": -122.322,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9447265",
+   "name": "Meadow Point, Shilshole Bay",
+   "lat": 47.6883,
+   "lng": -122.403,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445913",
+   "name": "Port Blakely",
+   "lat": 47.5967,
+   "lng": -122.51,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445882",
+   "name": "Eagle Harbor, Bainbridge Island",
+   "lat": 47.62,
+   "lng": -122.515,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9446025",
+   "name": "Point Vashon, Vashon Island",
+   "lat": 47.5117,
+   "lng": -122.463,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445938",
+   "name": "Clam Bay, Rich Passage",
+   "lat": 47.5733,
+   "lng": -122.543,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445993",
+   "name": "Harper, Yukon Harbor",
+   "lat": 47.5233,
+   "lng": -122.517,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445753",
+   "name": "Port Madison",
+   "lat": 47.705,
+   "lng": -122.525,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445683",
+   "name": "Port Jefferson",
+   "lat": 47.7467,
+   "lng": -122.477,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445832",
+   "name": "Brownsville, Port Orchard",
+   "lat": 47.6517,
+   "lng": -122.615,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445958",
+   "name": "Bremerton, Sinclair Inlet, Port Orchard",
+   "lat": 47.56169891357422,
+   "lng": -122.62300109863281,
+   "state": "WA",
+   "type": "R"
+  },
+  {
+   "id": "9446248",
+   "name": "Des Moines, East Passage",
+   "lat": 47.4,
+   "lng": -122.328,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9447427",
+   "name": "Edmonds",
+   "lat": 47.8133,
+   "lng": -122.383,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445639",
+   "name": "Kingston, Appletree Cove",
+   "lat": 47.7967,
+   "lng": -122.493,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445901",
+   "name": "Tracyton, Dyes Inlet",
+   "lat": 47.61,
+   "lng": -122.66,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9446254",
+   "name": "Burton, Quartermaster Hbr. (inside), Vashon I.",
+   "lat": 47.395,
+   "lng": -122.463,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445719",
+   "name": "Poulsbo, Liberty Bay",
+   "lat": 47.725,
+   "lng": -122.638,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9446375",
+   "name": "Tahlequah, Neil Pt., Dalco Passage, Vashon I.",
+   "lat": 47.3333,
+   "lng": -122.507,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445133",
+   "name": "Bangor Wharf",
+   "lat": 47.7483,
+   "lng": -122.727,
+   "state": "WA",
+   "type": "R"
+  },
+  {
+   "id": "9445059",
+   "name": "Port Gamble",
+   "lat": 47.8583,
+   "lng": -122.58,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9445088",
+   "name": "Lofall",
+   "lat": 47.815,
+   "lng": -122.657,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9446291",
+   "name": "Wauna, Carr Inlet",
+   "lat": 47.378299713134766,
+   "lng": -122.63400268554688,
+   "state": "WA",
+   "type": "R"
+  },
+  {
+   "id": "9446369",
+   "name": "Gig Harbor",
+   "lat": 47.34,
+   "lng": -122.588,
+   "state": "WA",
+   "type": "S"
+  },
+  {
+   "id": "9450041",
+   "name": "Minnie Bay",
+   "lat": 54.7267,
+   "lng": -132.302,
+   "state": "AK",
+   "type": "S"
+  },
+  {
+   "id": "9450055",
+   "name": "Security Cove",
+   "lat": 54.7483,
+   "lng": -132.855,
+   "state": "AK",
+   "type": "S"
+  },
+  {
+   "id": "9450104",
+   "name": "Nakat Harbor, Alaska",
+   "lat": 54.82,
+   "lng": -130.7,
+   "state": "AK",
+   "type": "S"
+  },
+  {
+   "id": "1610367",
+   "name": "Nonopapa, Niihau Island",
+   "lat": 21.87,
+   "lng": -160.235,
+   "state": "HI",
+   "type": "S"
+  },
+  {
+   "id": "1611347",
+   "name": "Port Allen, Hanapepe Bay",
+   "lat": 21.9033,
+   "lng": -159.592,
+   "state": "HI",
+   "type": "R"
+  },
+  {
+   "id": "1611400",
+   "name": "NAWILIWILI",
+   "lat": 21.9544,
+   "lng": -159.3561,
+   "state": "HI",
+   "type": "R"
+  },
+  {
+   "id": "8720001",
+   "name": "Kings Ferry",
+   "lat": 30.7867,
+   "lng": -81.84,
+   "state": "FL",
+   "type": "S"
+  },
+  {
+   "id": "8720004",
+   "name": "Crandall",
+   "lat": 30.7217,
+   "lng": -81.6217,
+   "state": "FL",
+   "type": "R"
+  },
+  {
+   "id": "8720006",
+   "name": "Little St. Marys River",
+   "lat": 30.7317,
+   "lng": -81.7267,
+   "state": "FL",
+   "type": "S"
+  },
+  {
+   "id": "8410140",
+   "name": "EASTPORT",
+   "lat": 44.90460968017578,
+   "lng": -66.9828872680664,
+   "state": "ME",
+   "type": "R"
+  },
+  {
+   "id": "8410714",
+   "name": "Coffins Point",
+   "lat": 44.87,
+   "lng": -67.1083,
+   "state": "ME",
+   "type": "R"
+  },
+  {
+   "id": "8410715",
+   "name": "Garnet Point, Pennamquan River",
+   "lat": 44.9233,
+   "lng": -67.13,
+   "state": "ME",
+   "type": "R"
+  },
+  {
+   "id": "8770475",
+   "name": "Port Arthur",
+   "lat": 29.86669921875,
+   "lng": -93.93000030517578,
+   "state": "TX",
+   "type": "R"
+  },
+  {
+   "id": "8770520",
+   "name": "Rainbow Bridge",
+   "lat": 29.979999542236328,
+   "lng": -93.88169860839844,
+   "state": "TX",
+   "type": "R"
+  },
+  {
+   "id": "8770542",
+   "name": "Buffalo Bayou, Houston Ship Channel",
+   "lat": 29.761899948120117,
+   "lng": -95.34429931640625,
+   "state": "TX",
+   "type": "R"
+  }
+ ]
+}

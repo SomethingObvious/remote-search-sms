@@ -4,22 +4,33 @@
 
 # Who can ask, as phone numbers in +16045551234 form, email addresses and bare domains,
 # separated by commas. It has to be set, as nobody else ever gets an answer. A phone
-# number here turns on texting the Twilio number, and a carrier's SMS-to-email gateway
-# domain (like txt.bell.ca) covers texts sent to the email address.
+# number here turns on texting the Twilio number or the Android phone, and a carrier's
+# SMS-to-email gateway domain (like txt.bell.ca) covers texts sent to the email address.
 ALLOWED_SENDERS=+16045551234,txt.bell.ca,me@example.com
+# Your own number. Answers to gateway mail are texted here, and so is the start-up text.
+PHONE_TO=+16045551234
 
-# Twilio, from https://console.twilio.com. Leave the number's "A message comes in"
-# webhook empty, since this checks for new texts itself.
+# Twilio, from https://console.twilio.com, is one way to get texts. Leave the number's
+# "A message comes in" webhook empty, since this checks for new texts itself.
 TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_AUTH_TOKEN=your_auth_token
 TWILIO_PHONE_FROM=+15551234567
-# Where answers to gateway mail are texted, when Twilio is set up.
-PHONE_TO=+16045551234
+
+# Or an Android phone with a SIM, sitting at home on the same network, running the free
+# SMS Gateway for Android app (https://sms-gate.app) with its local server on. The
+# address, username and password are on the app's Local Server card. Texts then cost
+# whatever the phone's plan charges, and there's nothing to register.
+ANDROID_URL=
+ANDROID_USER=
+ANDROID_PASSWORD=
 
 # Email, read over IMAP with an app password (Google Account > Security > App passwords,
-# or appleid.apple.com for iCloud). The servers are known for Gmail, iCloud, Fastmail and
-# Yahoo, and anything else needs IMAP_HOST and SMTP_HOST. A separate address just for this
-# is simplest, though it only ever opens mail from ALLOWED_SENDERS.
+# or appleid.apple.com for iCloud). The servers are known for Gmail, iCloud, Fastmail,
+# Yahoo and AOL, and anything else needs IMAP_HOST and SMTP_HOST. Proton needs its Bridge
+# app running on this computer, with the password Bridge shows. Outlook and Hotmail can't
+# be read, as Microsoft only allows an OAuth sign-in, though they can still email
+# questions in. A separate address just for this is simplest, though it only ever opens
+# mail from ALLOWED_SENDERS.
 MAIL_ADDRESS=
 MAIL_PASSWORD=
 MAIL_FOLDER=INBOX
@@ -44,8 +55,9 @@ BRAVE_API_KEY=
 # The Google News edition, as a country code like GB, or CA:fr for the French one in Canada.
 NEWS_REGION=CA
 
-# Command words to turn off, like avy,road,tide if you're nowhere near BC. A word that's
-# off goes to the web search instead. Every .py file in PLUGINS_DIR adds commands.
+# Command words to turn off, like avy,tide if you're nowhere near mountains or the sea.
+# A word that's off goes to the web search instead. Every .py file in PLUGINS_DIR adds
+# commands.
 COMMANDS_OFF=
 PLUGINS_DIR=plugins
 

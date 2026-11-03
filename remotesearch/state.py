@@ -1,10 +1,16 @@
-"""A small JSON file that survives restarts: Twilio messages already handled and unsent pages."""
+"""A small JSON file that survives restarts: texts already handled and unsent pages."""
 
 import json
+import logging
 import os
 import sys
+from collections.abc import Callable, Iterable
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeVar
+
+logger = logging.getLogger("remotesearch")
+T = TypeVar("T")
 
 DEFAULT_STATE_FILE = "remote-search-state.json"
 
@@ -74,3 +80,57 @@ class State:
             return None
         self.set_pages(sender, pages[1:])
         return str(pages[0])
+
+
+class Seen:
+    """The texts one inbox has handled, by key, kept under ``name`` in the state file.
+
+    Neither Twilio nor the phone can list only what's new, so each poll lists a window
+    reaching ``lookback`` behind the last one, and the keys here keep the overlap from
+    being answered twice.
+    """
+
+    def __init__(self, state: State, name: str, lookback: timedelta) -> None:
+        self.state = state
+        self.name = name
+        self.lookback = lookback
+        self.now = datetime.now(UTC)
+        # Only stored once a listing works, so a failed first poll is still a first poll.
+        self.first_run = name not in state.data
+        self.box = state.data.get(name) or {"seen": {}, "checked": self.now.isoformat()}
+        self.since = datetime.fromisoformat(self.box["checked"]) - lookback
+
+    def fresh(
+        self,
+        listed: Iterable[T],
+        key: Callable[[T], str],
+        when: Callable[[T], datetime],
+        *,
+        catch_up: bool,
+    ) -> list[T]:
+        """What in ``listed`` isn't handled yet, oldest first.
+
+        On the first start that's all set aside as handled, unless ``catch_up``.
+        """
+        new = sorted((m for m in listed if key(m) not in self.box["seen"]), key=when)
+        # Keys older than the window can't come back, so they're dropped to keep the file small.
+        oldest = self.since - self.lookback
+        self.box["seen"] = {
+            k: at for k, at in self.box["seen"].items() if datetime.fromisoformat(at) >= oldest
+        }
+        self.box["checked"] = self.now.isoformat()
+        self.state.data[self.name] = self.box
+        if self.first_run and not catch_up:
+            for message in new:
+                self.box["seen"][key(message)] = when(message).isoformat()
+            if new:
+                logger.info("Skipping %d texts from before the first start", len(new))
+            new = []
+        self.state.save()
+        return new
+
+    def handled(self, key: str, when: datetime) -> None:
+        # Saved before the reply goes out, so a crash or a failed send can't turn into
+        # the same answer on every poll.
+        self.box["seen"][key] = when.isoformat()
+        self.state.save()

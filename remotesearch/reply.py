@@ -112,6 +112,10 @@ class Answerer:
 
     @staticmethod
     def _reads_as_prose(command: commands.Command, rest: str) -> bool:
+        first = place_words(rest).split()[:1]
+        # "I" is a stopword, but "road I-75 GA" isn't a sentence.
+        if first and any(c.isdigit() for c in first[0]):
+            return False
         following = words(place_words(rest))[:1]
         return command.loose and bool(following) and following[0] in STOPWORDS
 

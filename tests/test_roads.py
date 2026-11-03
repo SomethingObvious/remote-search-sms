@@ -75,11 +75,83 @@ def test_roads_near_a_town_worst_first() -> None:
     assert calls[1][1]["bbox"] == "-123.4600,49.5000,-122.8600,49.9000"
 
 
-def test_roads_outside_bc() -> None:
-    banff = place("Banff", 51.18, -115.57, "Alberta")
-    with fake_web({OPEN_METEO_GEOCODE: banff}) as calls:
-        assert road("Banff") == "DriveBC only covers BC roads, and Banff, Alberta, CA isn't in BC."
+def test_roads_where_there_is_no_feed() -> None:
+    portland = place("Portland", 45.52, -122.68, "Oregon", "US")
+    with fake_web({OPEN_METEO_GEOCODE: portland}) as calls:
+        assert road("Portland") == (
+            "There's no road event feed for Portland, Oregon, US. It covers BC, Quebec, most "
+            "other provinces and 17 states."
+        )
     assert len(calls) == 1
+
+
+def test_a_town_named_with_a_number_is_looked_up_as_a_town() -> None:
+    town = place("100 Mile House", 51.64, -121.29, "British Columbia")
+    with fake_web({OPEN_METEO_GEOCODE: town, OPEN511: {"events": []}}):
+        assert road("100 Mile House") == "No DriveBC events near 100 Mile House right now."
+
+
+ALBERTA = {
+    f"https://511.alberta.ca/{path}/{layer}": load(f"alberta511_{layer.lower()}{suffix}.json")
+    for layer in ("Incidents", "Closures")
+    for path, suffix in (("List/GetData", ""), ("map/mapIcons", "_map"))
+}
+
+
+def test_roads_near_an_alberta_town() -> None:
+    lake_louise = place("Lake Louise", 51.43, -116.18, "Alberta")
+    with fake_web(ALBERTA | {OPEN_METEO_GEOCODE: lake_louise}):
+        assert road("Lake Louise") == (
+            "511 Alberta, near Lake Louise, 1 event: Traffic advisory on Moraine Lake Rd All "
+            "Directions Near Tramline. All lanes closed. Activities: Road Closed Comments: "
+            "Moraine Lake Road is CLOSED. For more information about this closure, visit the "
+            'Parks Canada "Visiting Lake Louise and Moraine Lake" webpage link: '
+            "https://parks.canada.ca/pn-np/ab/banff/visit/parkbus/louise"
+        )
+
+
+@pytest.mark.parametrize("text", ["hwy 6 ab", "6 alberta", "Highway 6, AB"])
+def test_roads_on_a_highway_in_another_province(text: str) -> None:
+    with fake_web(ALBERTA):
+        assert road(text) == (
+            "511 Alberta, Highway 6, 1 event: General Information on HWY-6 Both Directions Near "
+            "Alberta Canada Montana United States Border. All lanes closed. Activities: Road "
+            "Closed Comments: Chief Mountain Border Crossing located on Highway 6 near Waterton "
+            "Lakes National Park - CLOSED for the season until May 15, 2027."
+        )
+
+
+def test_roads_on_a_quiet_highway_in_another_province() -> None:
+    with fake_web(ALBERTA):
+        reply = road("hwy 2 alberta")
+    assert reply == "No 511 Alberta closures or incidents on Highway 2 right now."
+
+
+def test_an_unmapped_event_matches_by_its_place_name() -> None:
+    unmapped = ALBERTA | {"https://511.alberta.ca/map/mapIcons/Incidents": {"item2": []}}
+    sheep_creek = place("Sheep Creek", 49.0, -100.0, "Alberta")
+    with fake_web(unmapped | {OPEN_METEO_GEOCODE: sheep_creek}):
+        reply = road("Sheep Creek")
+    assert reply is not None
+    assert reply.startswith("511 Alberta, near Sheep Creek, 1 event: ")
+    assert "HWY-40" in reply
+
+
+QUEBEC = {"https://ws.mapserver.transports.gouv.qc.ca/": load("quebec_evenements.json")}
+BEAUCE = "Fermeture de 1 voie sur 2: A-73 à la hauteur route du Golf (Beauceville)"
+
+
+def test_roads_near_a_quebec_town() -> None:
+    beauceville = place("Beauceville", 46.21, -70.78, "Quebec")
+    with fake_web(QUEBEC | {OPEN_METEO_GEOCODE: beauceville}):
+        assert road("Beauceville") == f"Québec 511, near Beauceville, 1 event: {BEAUCE}"
+
+
+@pytest.mark.parametrize("text", ["73 qc", "A-73 in Quebec", "a73 québec"])
+def test_roads_on_a_quebec_highway(text: str) -> None:
+    with fake_web(QUEBEC) as calls:
+        assert road(text) == f"Québec 511, Highway 73, 1 event: {BEAUCE}"
+    assert calls[0][1]["srsName"] == "EPSG:4326"
 
 
 def test_drive_reads_the_recorded_route() -> None:

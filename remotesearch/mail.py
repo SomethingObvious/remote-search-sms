@@ -22,8 +22,9 @@ from .text import clean_query
 
 logger = logging.getLogger("remotesearch")
 
-# The servers for the mailboxes that still take an app password. Outlook.com stopped
-# in 2024 and only takes OAuth now, so it isn't here.
+# Proton Bridge, the app Proton needs for IMAP, serves the mailbox on this computer.
+PROTON_BRIDGE = ("127.0.0.1:1143", "127.0.0.1:1025")
+# The servers for the mailboxes that still take an app password.
 KNOWN_SERVERS = {
     "gmail.com": ("imap.gmail.com", "smtp.gmail.com:465"),
     "googlemail.com": ("imap.gmail.com", "smtp.gmail.com:465"),
@@ -32,7 +33,24 @@ KNOWN_SERVERS = {
     "mac.com": ("imap.mail.me.com", "smtp.mail.me.com:587"),
     "fastmail.com": ("imap.fastmail.com", "smtp.fastmail.com:465"),
     "yahoo.com": ("imap.mail.yahoo.com", "smtp.mail.yahoo.com:465"),
+    "ymail.com": ("imap.mail.yahoo.com", "smtp.mail.yahoo.com:465"),
+    "aol.com": ("imap.aol.com", "smtp.aol.com:465"),
+    "proton.me": PROTON_BRIDGE,
+    "protonmail.com": PROTON_BRIDGE,
+    "protonmail.ch": PROTON_BRIDGE,
+    "pm.me": PROTON_BRIDGE,
 }
+# Microsoft turned off password logins to IMAP for Outlook.com in 2024 and for
+# Microsoft 365 before that, so these only take OAuth now.
+MICROSOFT = re.compile(
+    r"(^|\.)(outlook|hotmail|live|msn)\.[a-z]{2,3}(\.[a-z]{2})?$|(^|\.)office365\.com$"
+)
+OUTLOOK_HELP = (
+    "Microsoft only lets {name} into IMAP with an OAuth sign-in now, which this doesn't do. "
+    "Read a Gmail, iCloud, Fastmail, Yahoo or Proton address instead, and your Outlook "
+    "address can still email questions to it from ALLOWED_SENDERS."
+)
+LOOPBACK = frozenset({"127.0.0.1", "localhost", "::1"})
 # A carrier's SMS-to-email gateway sends from the phone's own number, like
 # 6045551234@txt.bell.ca, so mail from an address like that gets its answer by SMS.
 PHONE_GATEWAY = re.compile(r"\+?1?\d{10}")
@@ -54,6 +72,11 @@ class FolderError(MailboxError):
 # Without a context of their own, imaplib and smtplib check neither the certificate nor
 # the host name, so anyone on the network path could take the password.
 TLS = ssl.create_default_context()
+# Proton Bridge signs its own certificate. Nobody on the network can get between two
+# programs on the same computer, so a server on this one isn't checked.
+LOCAL_TLS = ssl.create_default_context()
+LOCAL_TLS.check_hostname = False
+LOCAL_TLS.verify_mode = ssl.CERT_NONE
 # A refused login with one of these in it is the server being busy, not a wrong password.
 BUSY = re.compile(r"UNAVAILABLE|INUSE|THROTTLED|too many|try again", re.IGNORECASE)
 # Tries at reading or marking one message before it's left alone.
@@ -65,6 +88,11 @@ def servers(config: dict[str, str]) -> tuple[str, str]:
     domain = config.get("MAIL_ADDRESS", "").rpartition("@")[2].lower()
     imap, smtp = KNOWN_SERVERS.get(domain, ("", ""))
     imap, smtp = config.get("IMAP_HOST") or imap, config.get("SMTP_HOST") or smtp
+    host = split_host(imap.lower(), 993)[0]
+    # An Outlook address with an IMAP_HOST of its own, like a local gateway that does the
+    # OAuth, is left to work.
+    if MICROSOFT.search(host) or (not config.get("IMAP_HOST") and MICROSOFT.search(domain)):
+        raise SystemExit(OUTLOOK_HELP.format(name=host or domain))
     if not imap or not smtp:
         raise SystemExit(
             f"There are no known mail servers for {domain or 'MAIL_ADDRESS'}. Set IMAP_HOST "
@@ -97,6 +125,10 @@ def imap_utf7(text: str) -> str:
 def split_host(text: str, port: int) -> tuple[str, int]:
     host, _, given = text.partition(":")
     return host, int(given) if given.isdecimal() else port
+
+
+def tls_for(host: str) -> ssl.SSLContext:
+    return LOCAL_TLS if host.lower() in LOOPBACK else TLS
 
 
 def sender_address(message: Message) -> str:
@@ -188,12 +220,25 @@ class Mailbox:
         self.password = password
         self.host, self.port = split_host(host, 993)
         self.folder = folder or "INBOX"
-        self.conn: imaplib.IMAP4_SSL | None = None
+        self.conn: imaplib.IMAP4 | None = None
 
-    def open(self) -> imaplib.IMAP4_SSL:
+    def open(self) -> imaplib.IMAP4:
         if self.conn:
             return self.conn
-        conn = imaplib.IMAP4_SSL(self.host, self.port, ssl_context=TLS, timeout=REQUEST_TIMEOUT)
+        context = tls_for(self.host)
+        conn: imaplib.IMAP4
+        if self.port == 993:
+            conn = imaplib.IMAP4_SSL(
+                self.host, self.port, ssl_context=context, timeout=REQUEST_TIMEOUT
+            )
+        else:  # like Proton Bridge on 1143, which starts plain and upgrades
+            conn = imaplib.IMAP4(self.host, self.port, timeout=REQUEST_TIMEOUT)
+            try:
+                conn.starttls(context)
+            except BaseException:
+                with contextlib.suppress(OSError):  # a failed handshake can leave no socket
+                    conn.shutdown()
+                raise
         try:
             conn.login(self.address, self.password)
         except imaplib.IMAP4.abort:
@@ -250,13 +295,16 @@ class Mailbox:
 def smtp_login(host: str, address: str, password: str) -> smtplib.SMTP:
     """A logged-in SMTP connection, with TLS from the start on 465 and STARTTLS otherwise."""
     server, port = split_host(host, 465)
+    context = tls_for(server)
     if port == 465:
-        smtp: smtplib.SMTP = smtplib.SMTP_SSL(server, port, timeout=REQUEST_TIMEOUT, context=TLS)
+        smtp: smtplib.SMTP = smtplib.SMTP_SSL(
+            server, port, timeout=REQUEST_TIMEOUT, context=context
+        )
     else:
         smtp = smtplib.SMTP(server, port, timeout=REQUEST_TIMEOUT)
     try:
         if port != 465:
-            smtp.starttls(context=TLS)
+            smtp.starttls(context=context)
         smtp.login(address, password)
     except BaseException:
         smtp.close()

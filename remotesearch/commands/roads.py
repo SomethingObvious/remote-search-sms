@@ -1,10 +1,11 @@
-"""DriveBC road events, and driving distance and time from OSRM."""
+"""Road events from DriveBC and the other 511 sites, and driving times from OSRM."""
 
 import re
 from typing import Any
 
-from .. import net
+from .. import net, road511
 from ..places import find, place_label
+from ..road511 import BC, QC, SITES, region
 from . import command
 
 # What people call BC highways, as opposed to the numbers DriveBC files them under.
@@ -27,21 +28,10 @@ LAST_UPDATE = re.compile(r"\s*(?:Last|Next) update: [^.]*\.")
 DRIVE_USAGE = "Text it as drive <place> to <place>, like 'drive Vancouver to Whistler'."
 
 
-def road_filter(text: str) -> tuple[str, dict[str, Any]] | None:
-    """Turn "hwy 99", "coquihalla" or a BC town into a label and an Open511 filter."""
-    name = text.lower().strip(" .")
-    number = re.fullmatch(r"(?:hwy|highway|route|rte)?\s*#?\s*(\d{1,3}[a-z]?)", name)
-    if number or name in HIGHWAY_NAMES:
-        road = number.group(1).upper() if number else HIGHWAY_NAMES[name]
-        return f"Highway {road}", {"road_name": f"Highway {road}"}
-    hit = find(text)
-    if not hit:
-        return None
-    if hit.get("admin1") != "British Columbia":
-        return place_label(hit), {}
-    lat, lon = hit["latitude"], hit["longitude"]
-    box = f"{lon - 0.3:.4f},{lat - 0.2:.4f},{lon + 0.3:.4f},{lat + 0.2:.4f}"
-    return f"near {hit['name']}", {"bbox": box}
+# A route number, and what follows it, as in "hwy 99", "I-75 GA" or "A-73 in Quebec".
+HIGHWAY = re.compile(
+    r"(?:hwy|highway|route|rte|us|sr|i|a|r)?[\s#.-]*(\d{1,4}[a-z]?)(?:\s*,\s*|\s+in\s+|\s+)?(.*)"
+)
 
 
 def worst_first(event: dict[str, Any]) -> tuple[bool, bool, bool]:
@@ -56,17 +46,47 @@ def worst_first(event: dict[str, Any]) -> tuple[bool, bool, bool]:
 @command(
     "road",
     "roads",
-    help="road <highway or BC town>: DriveBC closures and events, worst first, like "
-    "'road hwy 99', 'road coquihalla' or 'road Squamish'.",
+    help="road <town or highway>: closures and events worst first, from DriveBC or the "
+    "province's or state's 511, like 'road Squamish' or 'road hwy 2 AB'.",
     loose=True,
 )
 def road(text: str) -> str | None:
-    found = road_filter(text)
-    if not found:
+    name = text.lower().strip(" .")
+    if name in HIGHWAY_NAMES:
+        return drivebc(
+            f"Highway {HIGHWAY_NAMES[name]}", {"road_name": f"Highway {HIGHWAY_NAMES[name]}"}
+        )
+    number = HIGHWAY.fullmatch(name)
+    if number:
+        route, rest = number.group(1).upper(), number.group(2).strip()
+        # A bare number is a BC highway, as it always was.
+        area = region(rest) if rest else BC
+        if area == BC:
+            return drivebc(f"Highway {route}", {"road_name": f"Highway {route}"})
+        if area == QC:
+            return road511.quebec(number=route)
+        if area in SITES:
+            return road511.on_highway(SITES[area], route)
+        # Otherwise the number is part of a place, like "100 Mile House".
+    hit = find(text)
+    if not hit:
         return None
-    label, filters = found
-    if not filters:
-        return f"DriveBC only covers BC roads, and {label} isn't in BC."
+    area = (hit.get("country_code", ""), hit.get("admin1", ""))
+    if area == BC:
+        lat, lon = hit["latitude"], hit["longitude"]
+        box = f"{lon - 0.3:.4f},{lat - 0.2:.4f},{lon + 0.3:.4f},{lat + 0.2:.4f}"
+        return drivebc(f"near {hit['name']}", {"bbox": box})
+    if area == QC:
+        return road511.quebec(hit=hit)
+    if area in SITES:
+        return road511.near_place(SITES[area], hit)
+    return (
+        f"There's no road event feed for {place_label(hit)}. It covers BC, Quebec, most "
+        "other provinces and 17 states."
+    )
+
+
+def drivebc(label: str, filters: dict[str, Any]) -> str:
     data = net.get_json(
         "https://api.open511.gov.bc.ca/events",
         "DriveBC",

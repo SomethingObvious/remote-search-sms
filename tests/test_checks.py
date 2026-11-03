@@ -7,6 +7,7 @@ def test_a_check_that_stops_early_is_still_shown_under_its_section() -> None:
     assert list(results) == [
         "Allowed senders",
         "Twilio",
+        "Android phone",
         "Email",
         "AI answers",
         "Brave Search",
@@ -15,6 +16,7 @@ def test_a_check_that_stops_early_is_still_shown_under_its_section() -> None:
     assert results["Email"].ok is False
     assert "IMAP_HOST" in results["Email"].detail
     assert results["Twilio"].ok is None
+    assert results["Android phone"].ok is None
 
 
 def test_a_half_filled_twilio_section_says_what_is_missing() -> None:

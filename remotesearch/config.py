@@ -25,27 +25,39 @@ SETTINGS = (
         "like txt.bell.ca, separated by commas. Nobody else gets an answer.",
     ),
     Setting(
+        "PHONE_TO",
+        "Who Can Ask",
+        "Your phone",
+        "Your own number. Answers to gateway mail are texted here, and so is the start-up text.",
+    ),
+    Setting(
         "TWILIO_ACCOUNT_SID", "Twilio", "Account SID", "Starts with AC, on the Twilio console."
     ),
     Setting("TWILIO_AUTH_TOKEN", "Twilio", "Auth token", "Next to the SID.", secret=True),
     Setting("TWILIO_PHONE_FROM", "Twilio", "Twilio number", "The number people text, as +1..."),
     Setting(
-        "PHONE_TO",
-        "Twilio",
-        "Your phone",
-        "Where answers to gateway mail are texted, and where the start-up text goes.",
+        "ANDROID_URL",
+        "Android Phone",
+        "Phone address",
+        "From the app's Local Server card, like http://192.168.1.50:8080.",
     ),
+    Setting("ANDROID_USER", "Android Phone", "Username", "On the same card."),
+    Setting("ANDROID_PASSWORD", "Android Phone", "Password", "On the same card.", secret=True),
     Setting("MAIL_ADDRESS", "Email", "Address", "The mailbox it reads, like you@gmail.com."),
     Setting(
         "MAIL_PASSWORD",
         "Email",
         "App password",
-        "An app password, not your normal one. Gmail and iCloud make them in account security.",
+        "An app password, not your normal one. Gmail and iCloud make them in account "
+        "security, and Proton Bridge shows its own.",
         secret=True,
     ),
     Setting("MAIL_FOLDER", "Email", "Folder", "The folder or Gmail label to read. INBOX if empty."),
     Setting(
-        "IMAP_HOST", "Email", "IMAP server", "Only needed outside Gmail, iCloud, Fastmail or Yahoo."
+        "IMAP_HOST",
+        "Email",
+        "IMAP server",
+        "Only needed outside Gmail, iCloud, Fastmail, Yahoo, AOL and Proton.",
     ),
     Setting("SMTP_HOST", "Email", "SMTP server", "As host:port, like smtp.example.com:587."),
     Setting(
@@ -82,7 +94,7 @@ SETTINGS = (
         "COMMANDS_OFF",
         "Commands",
         "Turned off",
-        "Command words to turn off, like avy,road,tide outside BC.",
+        "Command words to turn off, like avy or tide if you never need them.",
     ),
     Setting("PLUGINS_DIR", "Commands", "Plugin folder", "Every .py file here adds commands."),
     Setting(
@@ -98,6 +110,7 @@ SETTINGS = (
 KEYS = tuple(s.key for s in SETTINGS)
 TWILIO_KEYS = ("TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_PHONE_FROM")
 MAIL_KEYS = ("MAIL_ADDRESS", "MAIL_PASSWORD")
+ANDROID_KEYS = ("ANDROID_URL", "ANDROID_USER", "ANDROID_PASSWORD")
 
 # Where config.txt is, so relative paths in it don't depend on the folder it's run from.
 CONFIG_DIR = "_CONFIG_DIR"

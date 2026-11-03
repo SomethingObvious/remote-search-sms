@@ -51,6 +51,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     run.add_argument(
         "--catch-up", action="store_true", help="also answer what was waiting at start"
     )
+    run.add_argument("--log", metavar="FILE", help="add to this file instead of the terminal")
     return parser.parse_args(argv)
 
 
@@ -107,7 +108,10 @@ def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
     # Only this package logs at INFO. Twilio's client logs every request at INFO,
     # account SID included.
-    logging.basicConfig(format="%(asctime)s %(levelname)s %(message)s")
+    log = getattr(args, "log", None)
+    logging.basicConfig(
+        format="%(asctime)s %(levelname)s %(message)s", filename=log, encoding="utf-8"
+    )
     logger.setLevel(logging.DEBUG if args.verbose else logging.INFO)
     config = load_config(args.config)
 
@@ -116,7 +120,17 @@ def main(argv: list[str] | None = None) -> None:
     elif args.action == "check":
         sys.exit(check(config, args.text))
     elif args.action == "run":
-        run(config, args)
+        try:
+            run(config, args)
+        # Started at login there's no terminal, so why it stopped has to be in the log.
+        except SystemExit as exc:
+            if log and exc.code not in (None, 0):
+                logger.error("Stopped: %s", exc.code)
+            raise
+        except Exception:
+            if log:
+                logger.exception("Stopped")
+            raise
     elif args.action == "setup":
         from .ui import serve
 

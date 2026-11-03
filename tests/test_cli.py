@@ -1,4 +1,6 @@
 import os
+import subprocess
+import sys
 import tempfile
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -143,3 +145,17 @@ def test_no_action_is_an_error(capsys: pytest.CaptureFixture) -> None:
         main([])
     assert done.value.code == 2
     assert "required: {setup,ask,check,run}" in capsys.readouterr().err
+
+
+def test_a_run_with_no_terminal_says_why_it_stopped(tmp_path: Path) -> None:
+    (tmp_path / "config.txt").write_text("ALLOWED_SENDERS=\n", encoding="utf-8")
+    log = tmp_path / "remote-search.log"
+    done = subprocess.run(
+        [sys.executable, "-m", "remotesearch", "run", "--config", "config.txt", "--log", str(log)],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert done.returncode == 1
+    assert "ERROR Stopped: ALLOWED_SENDERS is empty" in log.read_text(encoding="utf-8")

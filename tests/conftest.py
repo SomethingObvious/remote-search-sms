@@ -48,7 +48,8 @@ def _fresh() -> Iterator[None]:
     """Clear the per-run caches and the search cooldowns, and make every wait instant."""
     places.geocode.cache_clear()
     local.nominatim.cache_clear()
-    tides.stations.cache_clear()
+    tides.chs_stations.cache_clear()
+    tides.noaa_stations.cache_clear()
     search._resting.clear()
     net._last_call.clear()
     with patch("time.sleep"):

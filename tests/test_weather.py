@@ -5,10 +5,11 @@ from unittest.mock import patch
 import pytest
 from conftest import OPEN_METEO, OPEN_METEO_GEOCODE, fake_web, load
 
-from remotesearch.commands.weather import ec_alerts, forecast, sun, weather
+from remotesearch.commands.weather import ec_alerts, forecast, nws_alerts, sun, weather
 from remotesearch.net import SourceError
 
 EC = "https://api.weather.gc.ca/"
+NWS = "https://api.weather.gov/"
 # Before the recorded alerts expire and before the recorded tides, on a Sunday in Tofino.
 NOW = datetime(2026, 9, 27, 17, 0, tzinfo=UTC)
 
@@ -120,3 +121,15 @@ def test_sun_names_the_zone_and_skips_polar_days() -> None:
     polar["daily"] = {"sunrise": [None], "sunset": [None]}
     with fake_web({OPEN_METEO_GEOCODE: TOFINO, OPEN_METEO: polar}):
         assert sun("Tofino") is None
+
+
+def test_us_alerts_come_from_the_weather_service() -> None:
+    cocoa = {"name": "Cocoa", "latitude": 28.0, "longitude": -80.6, "country_code": "US"}
+    with fake_web({NWS: load("nws_alerts_florida.json")}) as calls:
+        assert nws_alerts(cocoa) == ["flood warning", "rip current statement"]
+    assert calls == [("https://api.weather.gov/alerts/active", {"point": "28.0000,-80.6000"})]
+    # Each country only asks its own service.
+    with fake_web({}) as calls:
+        assert nws_alerts(TOFINO["results"][0]) == []
+        assert ec_alerts(cocoa) == []
+    assert calls == []

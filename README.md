@@ -10,7 +10,9 @@ Texting your Twilio number is the simplest. The computer polls Twilio's API for 
 - Rogers Satellite in Canada or T-Mobile's T-Satellite in the US, which carry plain SMS to any number.
 - A Garmin inReach, texting the Twilio number as it would any phone, and the answer comes back to the device as a normal reply. The inReach has no number of its own though, and Garmin's forums say its texts go out from whichever Garmin number the gateway picks, so it can change between messages. Each of those has to be in `ALLOWED_SENDERS`, and a text from one that isn't gets ignored, with its number in the log.
 
-It also reads an email inbox over IMAP, logging in with an app password. Gmail, iCloud, Fastmail and Yahoo work with just the address and password, and any other provider needs `IMAP_HOST` and `SMTP_HOST`. A text to that address through your carrier's SMS-to-email gateway (from something like `6045551234@txt.bell.ca`) gets its answer texted to `PHONE_TO` when Twilio is set up, or emailed back to the gateway when it isn't, and plain email from an allowed address gets an email back in the same thread. It only opens mail from the allowed senders and leaves everything else unread, though a separate address for this is still the simplest. Several carriers have closed their gateways (Rogers in 2023, AT&T in 2025), so that part depends on yours. Don't send inReach messages to the email address, as they come from `no.reply.inreach@garmin.com` and the only way back is a form on Garmin's site, so it skips them. Text the Twilio number from the inReach instead.
+An old Android phone with a SIM can stand in for Twilio, which skips the per-text fees and the registration. It stays at home on the same network, plugged in, running the free [SMS Gateway for Android](https://sms-gate.app) app (1.59 or newer) with its local server on, and `ANDROID_URL`, `ANDROID_USER` and `ANDROID_PASSWORD` come from that app's Local Server card. You text the phone's own number, and its plan pays for the replies. Turn off RCS chats in the phone's messages app though, as texts from phones with RCS never reach the gateway, and turn off battery optimization for the app so Android doesn't put it to sleep. With both set up, it answers each one where it came in and uses the phone for texts to `PHONE_TO`.
+
+It also reads an email inbox over IMAP, logging in with an app password. Gmail, iCloud, Fastmail, Yahoo and AOL work with just the address and password, and any other provider needs `IMAP_HOST` and `SMTP_HOST`. Proton works through its Bridge app running on the same computer, with the password Bridge shows. Outlook and Hotmail mailboxes can't be read, as Microsoft only lets them into IMAP with an OAuth sign-in now, though an Outlook address can still email questions to whichever mailbox it reads. A text to that address through your carrier's SMS-to-email gateway (from something like `6045551234@txt.bell.ca`) gets its answer texted to `PHONE_TO` when Twilio is set up, or emailed back to the gateway when it isn't, and plain email from an allowed address gets an email back in the same thread. It only opens mail from the allowed senders and leaves everything else unread, though a separate address for this is still the simplest. Several carriers have closed their gateways (Rogers in 2023, AT&T in 2025), so that part depends on yours. Don't send inReach messages to the email address, as they come from `no.reply.inreach@garmin.com` and the only way back is a form on Garmin's site, so it skips them. Text the Twilio number from the inReach instead.
 
 ## Commands
 
@@ -18,11 +20,11 @@ The first word picks the source and the rest is the question. Anything else is a
 
 | Text | Answer |
 | --- | --- |
-| `weather <place>`, `forecast <place>` | Open-Meteo, now or over 3 days, plus Environment Canada alerts |
+| `weather <place>`, `forecast <place>` | Open-Meteo, now or over 3 days, plus Environment Canada or National Weather Service alerts |
 | `sun <place>`, `time <place>` | sunrise and sunset, or the local time |
-| `tide <place>` | next highs and lows at the nearest Canadian Hydrographic Service station |
-| `avy <place>` | Avalanche Canada danger ratings and problems |
-| `road <highway or BC town>` | DriveBC closures and events, like `road coquihalla` |
+| `tide <place>` | next highs and lows at the nearest Canadian or NOAA station, or Open-Meteo's tide model on coasts with none |
+| `avy <place>` | danger ratings and problems from Avalanche Canada, or avalanche.org in the US |
+| `road <town or highway>` | closures and events from DriveBC, Québec 511 or the province's or state's 511 site, like `road coquihalla` or `road hwy 2 AB` |
 | `drive <place> to <place>` | distance and time from OSRM, with no traffic |
 | `calc`, `convert`, `translate` | arithmetic, units and currency (ECB rates), MyMemory translation |
 | `news [topic]`, `score <team>` | Google News headlines, ESPN scores |
@@ -57,9 +59,10 @@ remote-search check --text        # try every account and text PHONE_TO once
 remote-search run                 # answer texts and mail until Ctrl-C
 remote-search run --once          # answer what's waiting and exit, for cron
 remote-search run --dry-run       # log replies instead of sending them
+remote-search run --log FILE      # log to FILE instead of the terminal
 ```
 
-At startup it skips mail that's already waiting, unless you pass `--catch-up`. Texts to the Twilio number that arrive while it's stopped get answered once it's back, and the ones it has handled are kept in `STATE_FILE`. A dry run leaves all of that alone, so mail stays unread and `STATE_FILE` isn't written.
+At startup it skips mail that's already waiting, unless you pass `--catch-up`. Texts to the Twilio number or the phone that arrive while it's stopped get answered once it's back, and the ones it has handled are kept in `STATE_FILE`. A dry run leaves all of that alone, so mail stays unread and `STATE_FILE` isn't written.
 
 On an inReach, `MAX_SMS_CHARS=160` keeps every reply to one message, which is about what Garmin passes through. A preset message like `weather here` is worth setting up too, since typing on the device is slow.
 
@@ -69,13 +72,58 @@ python -m pytest                  # offline tests
 python tests/live_smoke.py        # one real question to each keyless source
 ```
 
+## Keep It Running
+
+`remote-search run` stops when its terminal closes. To start it at every login, with a log since there's no terminal to show one, run this in PowerShell from the folder you installed it in on Windows:
+
+```
+$dir = (Get-Location).Path
+New-ItemProperty HKCU:\Software\Microsoft\Windows\CurrentVersion\Run -Name RemoteSearch -Force -Value "`"$dir\.venv\Scripts\pythonw.exe`" -m remotesearch run --config `"$dir\config.txt`" --log `"$dir\remote-search.log`""
+```
+
+`Remove-ItemProperty` with the same key and name takes it out again. On a Mac, save this as `~/Library/LaunchAgents/remote-search.plist` with your own paths, then run `launchctl load ~/Library/LaunchAgents/remote-search.plist`:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>remote-search</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/you/remote-search-sms/.venv/bin/remote-search</string>
+    <string>run</string>
+    <string>--config</string><string>/Users/you/remote-search-sms/config.txt</string>
+    <string>--log</string><string>/Users/you/remote-search-sms/remote-search.log</string>
+  </array>
+  <key>RunAtLoad</key><true/>
+</dict>
+</plist>
+```
+
+On Linux with systemd, save this as `~/.config/systemd/user/remote-search.service`, then run `systemctl --user enable --now remote-search`. Its log is in `journalctl --user -u remote-search`, and `loginctl enable-linger` keeps it going while you're logged out.
+
+```
+[Unit]
+Description=Remote Search over SMS
+After=network-online.target
+
+[Service]
+ExecStart=/home/you/remote-search-sms/.venv/bin/remote-search run --config /home/you/remote-search-sms/config.txt
+
+[Install]
+WantedBy=default.target
+```
+
+None of these restart it when it stops, as it only stops for a refused login or a mistake in the config, and retrying those every few seconds could get the mailbox locked. It can't answer while the computer sleeps either, so set it to stay awake while plugged in.
+
 ## Your Own Commands
 
 Every `.py` file in `plugins` is loaded at start, and `plugins/example.py` shows the whole thing. A command is a function with the `@command("word")` decorator that gets the rest of the text and returns the answer, or `None` to send it on to a web search. Put words in `COMMANDS_OFF` (like `quora,youtube`) to turn built-in ones off, so a text starting with one of them is searched for instead. The Commands page of the setup does the same with a checkbox.
 
 ## What It Won't Do
 
-It won't start without `ALLOWED_SENDERS`, and it only ever answers the sender or `PHONE_TO`. Every reply is billed, so `MAX_REPLIES_PER_POLL` and `MAX_REPLIES_PER_HOUR` (30 by default, and kept across restarts) cap them, and questions past a cap wait for a later poll. A US Twilio number needs A2P 10DLC registration before it can text US phones, and Canadian numbers bought since March 2025 need registering too. Twilio handles STOP and HELP itself on North American numbers, so a text of just STOP blocks every reply to that phone until it texts START. The scraped engines all block automated searches after a burst now and then, and once every one of them has, the reply says the web search isn't answering. A Brave key is the fix if that keeps happening. The mail check trusts the From header, which can be forged, so the allowed senders are a filter and not a lock.
+It won't start without `ALLOWED_SENDERS`, and it only ever answers the sender or `PHONE_TO`. Every reply is billed by Twilio or the phone's plan, so `MAX_REPLIES_PER_POLL` and `MAX_REPLIES_PER_HOUR` (30 by default, and kept across restarts) cap them, and questions past a cap wait for a later poll. A US Twilio number needs A2P 10DLC registration before it can text US phones, and Canadian numbers bought since March 2025 need registering too. Twilio handles STOP and HELP itself on North American numbers, so a text of just STOP blocks every reply to that phone until it texts START. The scraped engines all block automated searches after a burst now and then, and once every one of them has, the reply says the web search isn't answering. A Brave key is the fix if that keeps happening. The road answers outside BC and Quebec come from the 511 sites' own map pages, which aren't a published API, so one of them can stop answering after a site update, and a few provinces and most states aren't covered at all. The mail check trusts the From header, which can be forged, so the allowed senders are a filter and not a lock.
 
 ## License
 

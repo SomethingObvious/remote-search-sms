@@ -11,7 +11,9 @@ from functools import partial
 from pathlib import Path
 from typing import Any, Protocol
 
+from .android import Phone, PhoneInbox, make_phone_texter
 from .config import (
+    ANDROID_KEYS,
     MAIL_KEYS,
     TWILIO_KEYS,
     beside_config,
@@ -105,15 +107,26 @@ class Poller:
                 "email addresses that can ask."
             )
         use_mail = any(config.get(k) for k in MAIL_KEYS)
-        use_twilio = any(s.startswith("+") for s in self.allowed)
-        if not use_mail and not use_twilio:
+        use_texts = any(s.startswith("+") for s in self.allowed)
+        use_twilio = any(config.get(k) for k in TWILIO_KEYS)
+        use_android = any(config.get(k) for k in ANDROID_KEYS)
+        if not use_mail and not use_texts:
             raise SystemExit(
                 f"{source} doesn't set up anything to watch. Set MAIL_ADDRESS and MAIL_PASSWORD "
-                "to read email, or put your +phone number in ALLOWED_SENDERS and fill in the "
-                "Twilio settings to answer texts."
+                "to read email, or put your +phone number in ALLOWED_SENDERS and set up Twilio "
+                "or an Android phone to answer texts."
+            )
+        if use_texts and not use_twilio and not use_android:
+            raise SystemExit(
+                f"ALLOWED_SENDERS has a phone number, but {source} sets up nothing to text "
+                "with. Fill in the Twilio settings or the Android phone's."
             )
         require(
-            config, (MAIL_KEYS if use_mail else ()) + (TWILIO_KEYS if use_twilio else ()), source
+            config,
+            (MAIL_KEYS if use_mail else ())
+            + (TWILIO_KEYS if use_twilio else ())
+            + (ANDROID_KEYS if use_android else ()),
+            source,
         )
         self.interval = setting(config, "POLL_INTERVAL", DEFAULT_INTERVAL)
         self.max_replies = setting(config, "MAX_REPLIES_PER_POLL", DEFAULT_MAX_REPLIES)
@@ -126,25 +139,38 @@ class Poller:
         self.inboxes: list[Inbox] = []
         self._closers: list[Any] = []
 
-        client = twilio_client(config) if all(config.get(k) for k in TWILIO_KEYS) else None
-        text = make_texter(None if dry_run else client, config.get("TWILIO_PHONE_FROM", ""))
-        phone = config.get("PHONE_TO", "")
-        text_phone = partial(text, phone) if client and phone else None
+        client = twilio_client(config) if use_twilio else None
+        phone = (
+            Phone(config["ANDROID_URL"], config["ANDROID_USER"], config["ANDROID_PASSWORD"])
+            if use_android
+            else None
+        )
+        twilio_text = make_texter(None if dry_run else client, config.get("TWILIO_PHONE_FROM", ""))
+        phone_text = make_phone_texter(None if dry_run else phone)
+        # The phone's texts cost nothing past its plan, so it's used when both are set up.
+        text = phone_text if phone else twilio_text
+        to = config.get("PHONE_TO", "")
+        text_phone = partial(text, to) if (client or phone) and to else None
         # Someone texting by email gateway can't see the log, so a text says it's up.
         self.announce = text_phone if use_mail else None
         if use_mail:
             self.inboxes.append(self._mail_inbox(text_phone, catch_up))
-        if use_twilio:
+        if use_texts and client:
             logger.info("Checking texts to %s", config["TWILIO_PHONE_FROM"])
             self.inboxes.append(
                 TwilioInbox(
                     client,
                     config["TWILIO_PHONE_FROM"],
                     self.state,
-                    text,
+                    twilio_text,
                     allowed=self.allowed,
                     catch_up=catch_up,
                 )
+            )
+        if use_texts and phone:
+            logger.info("Checking texts to the phone at %s", phone.url)
+            self.inboxes.append(
+                PhoneInbox(phone, self.state, phone_text, allowed=self.allowed, catch_up=catch_up)
             )
         logger.info("Answering %s only", ", ".join(sorted(self.allowed)))
         # Dry runs write nothing, so one can run beside the real thing.

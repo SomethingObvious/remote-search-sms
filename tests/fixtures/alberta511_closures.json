@@ -1,0 +1,48 @@
+{
+ "recordsTotal": 3,
+ "recordsFiltered": 3,
+ "data": [
+  {
+   "id": 7,
+   "layerName": "Closures",
+   "roadwayName": "Moraine Lake Rd",
+   "description": "Traffic advisory on Moraine Lake Rd All Directions Near Tramline. All lanes closed.  Activities: Road Closed   <div class='cellSpacer'><i><b>Comments:</b></i> Moraine Lake Road is CLOSED. For more information about this closure, visit the Parks Canada \"Visiting Lake Louise and Moraine Lake\" webpage link: <a href=\"https://parks.canada.ca/pn-np/ab/banff/visit/parkbus/louise\" target=\"blank\">https://parks.canada.ca/pn-np/ab/banff/visit/parkbus/louise</a></div>",
+   "eventSubType": "trafficAdvisory",
+   "isFullClosure": true,
+   "severity": "None",
+   "direction": "All",
+   "locationDescription": "Tramline",
+   "startDate": "8/17/24, 11:57 AM",
+   "endDate": null,
+   "lastUpdated": "11/1/26, 7:48 AM"
+  },
+  {
+   "id": 8456,
+   "layerName": "Closures",
+   "roadwayName": "HWY-6",
+   "description": "General Information on HWY-6 Both Directions Near Alberta Canada Montana United States Border. All lanes closed.  Activities: Road Closed   <div class='cellSpacer'><i><b>Comments:</b></i> Chief Mountain Border Crossing located on Highway 6 near Waterton Lakes National Park - CLOSED for the season until May 15, 2027.</div>",
+   "eventSubType": "general",
+   "isFullClosure": true,
+   "severity": "None",
+   "direction": "Both",
+   "locationDescription": "Alberta Canada Montana United States Border",
+   "startDate": "9/30/26, 6:00 PM",
+   "endDate": "5/15/27, 6:00 PM",
+   "lastUpdated": "11/1/26, 7:48 AM"
+  },
+  {
+   "id": 17279,
+   "layerName": "Closures",
+   "roadwayName": "Edith Cavell Road",
+   "description": "Road Breakup on Edith Cavell Road All Directions Near HWY-93A. All lanes closed.  Activities: Road Closed   <div class='cellSpacer'><i><b>Comments:</b></i> Edith Cavell Road is closed until further notice.</div>",
+   "eventSubType": "roadBreakup",
+   "isFullClosure": true,
+   "severity": "None",
+   "direction": "All",
+   "locationDescription": "HWY-93A",
+   "startDate": "7/24/24, 6:11 PM",
+   "endDate": null,
+   "lastUpdated": "11/1/26, 8:07 AM"
+  }
+ ]
+}

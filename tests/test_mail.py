@@ -20,6 +20,7 @@ from remotesearch.mail import (
     search_terms,
     sender_address,
     servers,
+    smtp_login,
 )
 
 ALLOWED = {"txt.bell.ca", "me@example.com"}
@@ -64,11 +65,14 @@ class FakeIMAP:
         self.store_error = False
 
     def __call__(
-        self, host: str, port: int, ssl_context: ssl.SSLContext, timeout: float
+        self, host: str, port: int, ssl_context: ssl.SSLContext | None = None, timeout: float = 0
     ) -> "FakeIMAP":
-        assert verifies(ssl_context)
+        assert ssl_context is None or verifies(ssl_context)
         self.events.append(f"connect {host}:{port}")
         return self
+
+    def starttls(self, context: ssl.SSLContext) -> None:
+        self.events.append("starttls" if verifies(context) else "starttls unchecked")
 
     def login(self, user: str, password: str) -> tuple[str, list[bytes]]:
         if password != self.password:
@@ -132,8 +136,8 @@ class FakeSMTP:
     def __init__(
         self, host: str, port: int, timeout: float, context: ssl.SSLContext | None = None
     ) -> None:
-        assert context is None or verifies(context)
-        FakeSMTP.used.append(f"{type(self).__name__} {host}:{port}")
+        unchecked = "" if context is None or verifies(context) else " unchecked"
+        FakeSMTP.used.append(f"{type(self).__name__} {host}:{port}{unchecked}")
 
     def __enter__(self) -> "FakeSMTP":
         return self
@@ -142,8 +146,7 @@ class FakeSMTP:
         pass
 
     def starttls(self, context: ssl.SSLContext) -> None:
-        assert verifies(context)
-        FakeSMTP.used.append("starttls")
+        FakeSMTP.used.append("starttls" if verifies(context) else "starttls unchecked")
 
     def login(self, user: str, password: str) -> None:
         pass
@@ -166,6 +169,73 @@ def test_servers_for_known_and_other_mailboxes() -> None:
     assert servers(custom) == ("i.example.org", "s:587")
     with pytest.raises(SystemExit, match=r"no known mail servers for example\.org"):
         servers({"MAIL_ADDRESS": "me@example.org"})
+    assert servers({"MAIL_ADDRESS": "me@proton.me"}) == ("127.0.0.1:1143", "127.0.0.1:1025")
+    assert servers({"MAIL_ADDRESS": "me@aol.com"})[0] == "imap.aol.com"
+
+
+@pytest.mark.parametrize(
+    ("config", "named"),
+    [
+        ({"MAIL_ADDRESS": "me@outlook.com"}, "outlook.com"),
+        ({"MAIL_ADDRESS": "me@hotmail.co.uk"}, "hotmail.co.uk"),
+        ({"MAIL_ADDRESS": "me@live.ca"}, "live.ca"),
+        (
+            {
+                "MAIL_ADDRESS": "me@work.example",
+                "IMAP_HOST": "outlook.office365.com",
+                "SMTP_HOST": "x",
+            },
+            "outlook.office365.com",
+        ),
+        (
+            {
+                "MAIL_ADDRESS": "me@example.org",
+                "IMAP_HOST": "imap-mail.outlook.com",
+                "SMTP_HOST": "x",
+            },
+            "imap-mail.outlook.com",
+        ),
+    ],
+)
+def test_microsoft_mailboxes_are_turned_down_with_a_way_around(
+    config: dict[str, str], named: str
+) -> None:
+    with pytest.raises(SystemExit, match=re.escape(named) + ".*OAuth.*ALLOWED_SENDERS"):
+        servers(config)
+
+
+def test_an_outlook_address_behind_its_own_gateway_is_left_to_work() -> None:
+    config = {
+        "MAIL_ADDRESS": "me@outlook.com",
+        "IMAP_HOST": "localhost:1143",
+        "SMTP_HOST": "localhost:1025",
+    }
+    assert servers(config) == ("localhost:1143", "localhost:1025")
+    # A self-hosted server with "live" in its name isn't Microsoft's.
+    assert servers(
+        {"MAIL_ADDRESS": "a@b.org", "IMAP_HOST": "imap.live.example.org", "SMTP_HOST": "s"}
+    )
+
+
+def test_imap_off_port_993_upgrades_and_only_skips_the_check_on_this_computer() -> None:
+    for host, upgrade in (
+        ("127.0.0.1:1143", "starttls unchecked"),
+        ("imap.example.com:143", "starttls"),
+    ):
+        fake = FakeIMAP()
+        with patch("imaplib.IMAP4", fake):
+            Mailbox("me@proton.me", "app-password", host).open()
+        assert fake.events == [f"connect {host}", upgrade]
+
+
+def test_smtp_on_this_computer_skips_the_check(smtp: Any) -> None:
+    smtp_login("127.0.0.1:1025", "me@proton.me", "bridge-password")
+    smtp_login("localhost:465", "me@proton.me", "bridge-password")
+    assert smtp.used == [
+        "FakeSMTP 127.0.0.1:1025",
+        "starttls unchecked",
+        "FakeSMTP localhost:465 unchecked",
+    ]
 
 
 def test_the_server_filters_by_sender() -> None:

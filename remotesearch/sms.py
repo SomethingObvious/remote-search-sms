@@ -12,13 +12,13 @@ from twilio.base.exceptions import TwilioException
 from .config import phone_number, sender_permitted
 from .net import REQUEST_TIMEOUT
 from .reply import Incoming
-from .state import State
+from .state import Seen, State
 from .text import clean_query
 
 logger = logging.getLogger("remotesearch")
 
 # Twilio's DateSent filter only takes a date, so the window reaches a day behind the
-# last check. The SIDs in the state file keep that overlap from being answered twice.
+# last check.
 LOOKBACK = timedelta(days=1)
 # Twilio acts on these itself on North American numbers, and after STOP it refuses to
 # text that phone at all, so answering them would only log a failed send.
@@ -82,41 +82,12 @@ class TwilioInbox:
         self.catch_up = catch_up
 
     def fetch(self) -> Iterator[Incoming]:
-        now = datetime.now(UTC)
-        box = self.state.data.get("twilio")
-        first_run = box is None
-        box = box or {"seen": {}, "checked": now.isoformat()}
-        since = datetime.fromisoformat(box["checked"]) - LOOKBACK
-        listed = self.client.messages.list(to=self.number, date_sent_after=since)
-        fresh = sorted(
-            (
-                m
-                for m in listed
-                if m.direction == "inbound" and m.status == "received" and m.sid not in box["seen"]
-            ),
-            key=_sent_at,
-        )
-        # SIDs older than the window can't come back, so they're dropped to keep the file small.
-        box["seen"] = {
-            sid: when
-            for sid, when in box["seen"].items()
-            if datetime.fromisoformat(when) >= since - LOOKBACK
-        }
-        box["checked"] = now.isoformat()
-        self.state.data["twilio"] = box
-        if first_run and not self.catch_up:
-            for message in fresh:
-                box["seen"][message.sid] = _sent_at(message).isoformat()
-            if fresh:
-                logger.info("Skipping %d texts from before the first start", len(fresh))
-            fresh = []
-        self.state.save()
-
+        seen = Seen(self.state, "twilio", LOOKBACK)
+        listed = self.client.messages.list(to=self.number, date_sent_after=seen.since)
+        inbound = (m for m in listed if m.direction == "inbound" and m.status == "received")
+        fresh = seen.fresh(inbound, lambda m: m.sid, _sent_at, catch_up=self.catch_up)
         for message in fresh:
-            # Saved as handled before the reply goes out, so a crash or a failed send
-            # can't turn into the same billed answer on every poll.
-            box["seen"][message.sid] = _sent_at(message).isoformat()
-            self.state.save()
+            seen.handled(message.sid, _sent_at(message))
             sender = phone_number(message.from_ or "") or ""
             if not sender_permitted(sender, self.allowed):
                 logger.warning("Ignoring a text from %r as it isn't in ALLOWED_SENDERS", sender)

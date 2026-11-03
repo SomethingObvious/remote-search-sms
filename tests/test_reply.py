@@ -133,6 +133,15 @@ def test_words_that_start_sentences_need_a_real_argument(ddg) -> None:
     assert calls[0][0] == "https://api.stackexchange.com/2.3/search/advanced"
 
 
+def test_an_interstate_is_not_the_start_of_a_sentence() -> None:
+    with fake_web({"https://511ga.org/": {"data": [], "item2": []}}) as calls:
+        assert (
+            answer("road I-75 GA")
+            == "road: No Georgia 511 closures or incidents on Highway 75 right now."
+        )
+    assert calls[0][0] == "https://511ga.org/map/mapIcons/Incidents"
+
+
 def test_a_leading_in_doesnt_stop_a_place_command() -> None:
     with fake_web({OPEN_METEO_GEOCODE: load("open_meteo_geocode_tofino.json")}):
         assert answer("time in Tofino").startswith("time: Tofino, British Columbia, CA: ")

@@ -376,7 +376,7 @@ code { font: 0.92em var(--mono); background: rgb(64 112 184 / 0.09); padding: 1p
     <div class="folio" aria-hidden="true">1</div>
     <div class="page-head">
       <h1>Setup</h1>
-      <p class="lede">Fill these in from the top. Who can ask, then at least one way in, Twilio for texts or an email address for carrier gateways. Check each part before you start it.</p>
+      <p class="lede">Fill these in from the top. Who can ask, then at least one way in, Twilio or an Android phone for texts, or an email address for carrier gateways. Check each part before you start it.</p>
     </div>
     <p class="saved-to"><span class="label">Saved To</span> <span class="path" id="config-path"></span></p>
     <div id="setup-notice"></div>
@@ -462,7 +462,7 @@ const TOKEN = document.querySelector('meta[name="token"]').content;
 const SECTIONS = {
   "Who Can Ask": {
     check: "Allowed senders",
-    intro: "Only these ever get an answer, and everyone else is ignored. Your own number turns on texting the Twilio number, and your carrier's gateway domain covers texts sent to the email address.",
+    intro: "Only these ever get an answer, and everyone else is ignored. Your own number turns on texting the Twilio number or the Android phone, and your carrier's gateway domain covers texts sent to the email address.",
   },
   "Twilio": {
     check: "Twilio",
@@ -470,9 +470,15 @@ const SECTIONS = {
     links: [["Open the Twilio Console", "https://console.twilio.com"]],
     testText: true,
   },
+  "Android Phone": {
+    check: "Android phone",
+    intro: "Or an old Android phone with a SIM, left at home on this network and plugged in. Install SMS Gateway for Android, turn on Local Server and start it, then copy the address, username and password from that card. Texts cost what the phone's plan charges, and there's nothing to register. Turn off RCS chats in its messages app, or texts from phones with RCS never reach it, and turn off battery optimization for the app.",
+    links: [["Get SMS Gateway for Android", "https://sms-gate.app"]],
+    testText: true,
+  },
   "Email": {
     check: "Email",
-    intro: "Read over IMAP with an app password, never your normal one. Gmail, iCloud, Fastmail and Yahoo need nothing else. It only opens mail from the allowed senders, though a separate address is still the simplest.",
+    intro: "Read over IMAP with an app password, never your normal one. Gmail, iCloud, Fastmail, Yahoo and AOL need nothing else, and Proton works through its Bridge app on this computer. Outlook and Hotmail can't be read, as Microsoft only takes an OAuth sign-in now, though they can still email questions in. It only opens mail from the allowed senders, though a separate address is still the simplest.",
     links: [["Gmail App Passwords", "https://myaccount.google.com/apppasswords"], ["iCloud App Passwords", "https://account.apple.com"]],
   },
   "AI Answers": {
@@ -488,14 +494,14 @@ const SECTIONS = {
     intro: "Command words can also be turned on and off from the Commands page.",
   },
   "Limits": {
-    intro: "Every reply is a billed text, so these cap how many go out. A question past a cap waits for a later check.",
+    intro: "Every reply is a text that Twilio or the phone's plan bills, so these cap how many go out. A question past a cap waits for a later check.",
   },
 };
 const EXAMPLES = [
   ["tide Tofino", "next highs and lows"],
   ["weather Whistler", "now, with any alerts"],
   ["avy Rogers Pass", "avalanche danger"],
-  ["road coquihalla", "DriveBC events"],
+  ["road coquihalla", "closures and events"],
   ["convert 50 usd to cad", "with the ECB rate"],
   ["score canucks", "live, final or next"],
   ["how long to boil water to purify it", "a web search"],
@@ -637,7 +643,7 @@ function renderSetup() {
 
     const head = h("div", { class: "section-head" }, h("span", { class: "n", text: n }), h("h2", { text: name }), h("span", { class: "grow" }));
     if (info.check) head.append(h("button", { class: "btn", onclick: (e) => runChecks(e.currentTarget) }, "Check"));
-    if (info.testText) head.append(h("button", { class: "btn", onclick: (e) => sendTestText(e.currentTarget) }, "Send Test Text"));
+    if (info.testText) head.append(h("button", { class: "btn", onclick: (e) => sendTestText(e.currentTarget, info.check) }, "Send Test Text"));
     const section = h("section", { class: "section", id }, head, h("p", { class: "intro" }, info.intro || "",
       (info.links || []).flatMap(([label, href]) => [" ", h("a", { href, target: "_blank", rel: "noopener noreferrer", text: label }), "."])));
     if (result) {
@@ -710,9 +716,10 @@ async function runChecks(button) {
   });
 }
 
-async function sendTestText(button) {
+async function sendTestText(button, via) {
   await busy(button, async () => {
-    const { sent } = await api("/api/test-text");
+    if (Object.keys(changes).length) await saveChanges();
+    const { sent } = await api("/api/test-text", { via });
     toast(`Sent a test text to ${sent}.`);
   });
 }
@@ -796,7 +803,7 @@ function renderActivity() {
   });
   if (!rows.length) {
     rows.push(h("tr", { class: "none" }, h("td", { colspan: "5", text: running
-      ? "Nothing asked yet. Text a question to the Twilio number or email it, and it shows up here a few seconds later."
+      ? "Nothing asked yet. Text it a question or email one, and it shows up here a few seconds later."
       : "Nothing asked yet. Start it with the button at the top, then text it a question." })));
   }
   board.replaceChildren(...rows);
@@ -818,16 +825,17 @@ function filled(key) {
 }
 function ready() {
   const twilio = ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_PHONE_FROM"].every(filled);
+  const phone = ["ANDROID_URL", "ANDROID_USER", "ANDROID_PASSWORD"].every(filled);
   const mail = ["MAIL_ADDRESS", "MAIL_PASSWORD"].every(filled);
-  const failed = ["Twilio", "Email"].some((name) => checks[name]?.ok === false);
-  return filled("ALLOWED_SENDERS") && (twilio || mail) && !failed;
+  const failed = ["Twilio", "Android phone", "Email"].some((name) => checks[name]?.ok === false);
+  return filled("ALLOWED_SENDERS") && (twilio || phone || mail) && !failed;
 }
 
 /* The first section with an empty field it needs, or a failed check */
 function firstUnfinished() {
   const needed = filled("ALLOWED_SENDERS") ? null : "Who Can Ask";
   const failed = Object.entries(SECTIONS).find(([, info]) => info.check && checks[info.check]?.ok === false);
-  const way = ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_PHONE_FROM", "MAIL_ADDRESS", "MAIL_PASSWORD"].some(filled) ? null : "Twilio";
+  const way = ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_PHONE_FROM", "ANDROID_URL", "ANDROID_USER", "ANDROID_PASSWORD", "MAIL_ADDRESS", "MAIL_PASSWORD"].some(filled) ? null : "Twilio";
   const name = needed || failed?.[0] || way;
   return name ? document.getElementById(`s-${name.toLowerCase().replace(/\W+/g, "-")}`) : null;
 }

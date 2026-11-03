@@ -1,6 +1,6 @@
 """Ask every keyless source one real question and print the SMS it would send back.
 
-This isn't part of the test run, since it goes online. It makes about 40 requests,
+This isn't part of the test run, since it goes online. It makes about 60 requests,
 spaced out by a second, so it's fine to run by hand now and then:
 
     python tests/live_smoke.py
@@ -19,10 +19,17 @@ QUESTIONS = (
     "weather Tofino",
     "forecast Whistler",
     "sun Tofino",
+    "forecast Miami",
     "tide Tofino",
+    "tide Seattle",
+    "tide Brighton UK",
     "avy Whistler",
+    "avy Breckenridge CO",
     "road hwy 99",
     "road Squamish",
+    "road hwy 2 AB",
+    "road Lake Louise",
+    "road 40 qc",
     "drive Vancouver to Whistler",
     "calc 15% of 80",
     "convert 10 km to mi",

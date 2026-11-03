@@ -1,0 +1,917 @@
+{
+ "type": "FeatureCollection",
+ "numberMatched": 20,
+ "name": "evenements",
+ "bbox": [
+  -77.367377,
+  45.157761,
+  -69.570036,
+  52.686908
+ ],
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 81387,
+    "entrave": "Circulation en alternance",
+    "numeroRoute": "",
+    "localisation": "chemin du Barrage sur le pont au-dessus de la rivière Blanche. Largeur de la voie réduite à 4,6 mètres.",
+    "direction": "OUEST et EST",
+    "municipalite": "Val-des-Monts",
+    "duree": "Indéterminée",
+    "cause": "Mesures préventives",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Outaouais)",
+    "regionsDiffusion": "(1:Outaouais)",
+    "enVigueurDepuis": "2025-07-30T11:17:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -75.644408,
+    45.673633,
+    -75.643941,
+    45.673896
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -75.644408,
+      45.673633
+     ],
+     [
+      -75.643941,
+      45.673896
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 105053,
+    "entrave": "Circulation en alternance",
+    "numeroRoute": "",
+    "localisation": "route du Nord à la hauteur rivière Broadback",
+    "direction": "SUD et NORD",
+    "municipalite": "Eeyou Istchee Baie-James",
+    "duree": "Indéterminée",
+    "cause": "Mesures préventives",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Nord-du-Québec)",
+    "regionsDiffusion": "(1:Nord-du-Québec)",
+    "enVigueurDepuis": "2024-12-12T10:57:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -75.124715,
+    50.749288,
+    -75.124266,
+    50.750186
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -75.124266,
+      50.749288
+     ],
+     [
+      -75.124715,
+      50.750186
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 105055,
+    "entrave": "Circulation en alternance",
+    "numeroRoute": "",
+    "localisation": "route du Nord à la hauteur rivière Barlow",
+    "direction": "SUD et NORD",
+    "municipalite": "Eeyou Istchee Baie-James",
+    "duree": "Indéterminée",
+    "cause": "Mesures préventives",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Nord-du-Québec)",
+    "regionsDiffusion": "(1:Nord-du-Québec)",
+    "enVigueurDepuis": "2024-12-12T11:41:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -74.292255,
+    50.137767,
+    -74.291473,
+    50.138055
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -74.291473,
+      50.137767
+     ],
+     [
+      -74.292255,
+      50.138055
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 111875,
+    "entrave": "",
+    "numeroRoute": "25",
+    "localisation": "Tunnel Louis-Hippolyte-La Fontaine<br/><br/>Hauteur libre réduite à 4,3 mètres. ATTENTION véhicules récréatifs : assurez-vous de vous y conformer avant d'inclure le tunnel dans votre itinéraire.",
+    "direction": "SUD et NORD",
+    "municipalite": "",
+    "duree": "",
+    "cause": "",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Montérégie)",
+    "regionsDiffusion": "(5:Montérégie,Mauricie—Centre-du-Québec,Laurentides—Lanaudière,Montréal,Laval)",
+    "enVigueurDepuis": "2026-07-30T10:29:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -73.507469,
+    45.57752,
+    -73.470836,
+    45.585152
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -73.470836,
+      45.57752
+     ],
+     [
+      -73.507469,
+      45.585152
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 115026,
+    "entrave": "Circulation à contresens",
+    "numeroRoute": "",
+    "localisation": "rue Baby sur le pont, 1 voie par direction. Largeur voie : 3,2 mètres",
+    "direction": "OUEST et EST",
+    "municipalite": "Joliette",
+    "duree": "Indéterminée",
+    "cause": "Inspection",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Laurentides—Lanaudière)",
+    "regionsDiffusion": "(1:Laurentides—Lanaudière)",
+    "enVigueurDepuis": "2025-09-23T10:13:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -73.438038,
+    46.030312,
+    -73.436978,
+    46.030948
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -73.438038,
+      46.030312
+     ],
+     [
+      -73.436978,
+      46.030948
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 117291,
+    "entrave": "",
+    "numeroRoute": "",
+    "localisation": "À Wentworth-Nord, pont fermé au-dessus du lac Saint-François-Xavier.<br/><br/>Cause : Mesures préventives.<br/><br/>Durée indéterminée.",
+    "direction": "SUD et NORD",
+    "municipalite": "",
+    "duree": "",
+    "cause": "",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Laurentides—Lanaudière)",
+    "regionsDiffusion": "(1:Laurentides—Lanaudière)",
+    "enVigueurDepuis": "2025-12-03T17:26:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -74.360698,
+    45.881395,
+    -74.3605,
+    45.881507
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -74.3605,
+      45.881395
+     ],
+     [
+      -74.360698,
+      45.881507
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 122290,
+    "entrave": "Pour les mises à jour sur l’état du service de traversier, consultez le site Web de la traverse.",
+    "numeroRoute": "",
+    "localisation": "Rivière-du-Loup - Saint-Siméon (Ouvert)",
+    "direction": "",
+    "municipalite": "",
+    "duree": "",
+    "cause": "",
+    "consequence": "",
+    "detour": "",
+    "regions": "(2:Québec (Capitale-Nationale),Bas-Saint-Laurent—Gaspésie—Îles-de-la-Madeleine)",
+    "regionsDiffusion": "(2:Québec (Capitale-Nationale),Bas-Saint-Laurent—Gaspésie—Îles-de-la-Madeleine)",
+    "enVigueurDepuis": "2026-04-02T11:53:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -69.873068,
+    47.786951,
+    -69.570036,
+    47.84772
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -69.873068,
+      47.839941
+     ],
+     [
+      -69.866205,
+      47.827503
+     ],
+     [
+      -69.855747,
+      47.817268
+     ],
+     [
+      -69.837341,
+      47.804638
+     ],
+     [
+      -69.810991,
+      47.794548
+     ],
+     [
+      -69.778097,
+      47.786951
+     ],
+     [
+      -69.757175,
+      47.787527
+     ],
+     [
+      -69.728465,
+      47.791002
+     ],
+     [
+      -69.699326,
+      47.798007
+     ],
+     [
+      -69.666967,
+      47.808947
+     ],
+     [
+      -69.626455,
+      47.824624
+     ],
+     [
+      -69.585686,
+      47.838855
+     ],
+     [
+      -69.572189,
+      47.847007
+     ],
+     [
+      -69.570036,
+      47.84772
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 125705,
+    "entrave": "Circulation en alternance",
+    "numeroRoute": "",
+    "localisation": "route du Nord à la hauteur rivière Lemare",
+    "direction": "SUD et NORD",
+    "municipalite": "Eeyou Istchee Baie-James",
+    "duree": "Indéterminée",
+    "cause": "Travaux",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Nord-du-Québec)",
+    "regionsDiffusion": "(1:Nord-du-Québec)",
+    "enVigueurDepuis": "2026-07-31T17:58:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -75.530107,
+    51.569462,
+    -75.514449,
+    51.580372
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -75.530107,
+      51.580372
+     ],
+     [
+      -75.527403,
+      51.578451
+     ],
+     [
+      -75.527052,
+      51.577954
+     ],
+     [
+      -75.526388,
+      51.576291
+     ],
+     [
+      -75.52566,
+      51.57547
+     ],
+     [
+      -75.514449,
+      51.569462
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 126657,
+    "entrave": "Fermeture de 1 voie sur 2",
+    "numeroRoute": "73",
+    "localisation": "A-73 à la hauteur route du Golf",
+    "direction": "SUD",
+    "municipalite": "Beauceville",
+    "duree": "Indéterminée",
+    "cause": "Mesures préventives",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Chaudière-Appalaches)",
+    "regionsDiffusion": "(1:Chaudière-Appalaches)",
+    "enVigueurDepuis": "2026-09-02T10:02:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -70.78481,
+    46.250157,
+    -70.781693,
+    46.251958
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -70.78481,
+      46.251958
+     ],
+     [
+      -70.781693,
+      46.250157
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 125479,
+    "entrave": "Fermeture",
+    "numeroRoute": "397",
+    "localisation": "R-397 à la hauteur rivière Laflamme",
+    "direction": "SUD et NORD",
+    "municipalite": "Secteur Lac-Despinassy",
+    "duree": "Indéterminée",
+    "cause": "Bris de la structure",
+    "consequence": "",
+    "detour": "R-113, R-386",
+    "regions": "(1:Abitibi-Témiscamingue)",
+    "regionsDiffusion": "(1:Abitibi-Témiscamingue)",
+    "enVigueurDepuis": "2026-07-24T13:49:00",
+    "couleurLigne": "#FF0000"
+   },
+   "bbox": [
+    -77.305276,
+    48.936508,
+    -77.30374,
+    48.936508
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -77.305276,
+      48.936508
+     ],
+     [
+      -77.30374,
+      48.936508
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 127391,
+    "entrave": "Stationnement des véhicules lourds fermé",
+    "numeroRoute": "15",
+    "localisation": "A-15 Aire de services de la Porte-du-Nord",
+    "direction": "NORD",
+    "municipalite": "Saint-Jérôme",
+    "duree": "Du 5 octobre 2026 à 0 h au 13 novembre 2026 à 18 h",
+    "cause": "Travaux",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Laurentides—Lanaudière)",
+    "regionsDiffusion": "(3:Laurentides—Lanaudière,Montréal,Laval)",
+    "enVigueurDepuis": "2026-09-28T15:43:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -74.067586,
+    45.841821,
+    -74.067389,
+    45.842259
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -74.067389,
+      45.841821
+     ],
+     [
+      -74.067586,
+      45.842259
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 128302,
+    "entrave": "Stationnement de véhicules lourds fermé",
+    "numeroRoute": "40",
+    "localisation": "A-40 Aire de services du Point-du-Jour",
+    "direction": "OUEST et EST",
+    "municipalite": "Lavaltrie",
+    "duree": "Du 4 novembre 2026 à 6 h au 4 novembre 2026 à 12 h",
+    "cause": "Travaux électriques",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Laurentides—Lanaudière)",
+    "regionsDiffusion": "(1:Laurentides—Lanaudière)",
+    "enVigueurDepuis": "2026-11-02T09:32:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -73.352159,
+    45.88434,
+    -73.345242,
+    45.89472
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -73.352159,
+      45.88434
+     ],
+     [
+      -73.345242,
+      45.89472
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 128387,
+    "entrave": "Départs de chaque rive aux 40 minutes, pour une durée indéterminée. Consultez le site Web de la Société des traversiers du Québec.",
+    "numeroRoute": "",
+    "localisation": "Tadoussac - Baie-Sainte-Catherine (Ouvert)",
+    "direction": "",
+    "municipalite": "",
+    "duree": "",
+    "cause": "",
+    "consequence": "",
+    "detour": "",
+    "regions": "(2:Québec (Capitale-Nationale),Côte-Nord)",
+    "regionsDiffusion": "(2:Québec (Capitale-Nationale),Côte-Nord)",
+    "enVigueurDepuis": "2026-11-03T07:51:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -69.729659,
+    48.126446,
+    -69.726504,
+    48.139526
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -69.726504,
+      48.139526
+     ],
+     [
+      -69.729659,
+      48.126446
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 128351,
+    "entrave": "Horaire modifié pour une durée indéterminée. Cause: 1 traversier en opération. Consultez le site Web de la Société des traversiers du Québec.",
+    "numeroRoute": "",
+    "localisation": "Québec - Lévis (Ouvert)",
+    "direction": "",
+    "municipalite": "",
+    "duree": "",
+    "cause": "",
+    "consequence": "",
+    "detour": "",
+    "regions": "(2:Québec (Capitale-Nationale),Chaudière-Appalaches)",
+    "regionsDiffusion": "(2:Québec (Capitale-Nationale),Chaudière-Appalaches)",
+    "enVigueurDepuis": "2026-11-02T06:22:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -71.202121,
+    46.810665,
+    -71.188265,
+    46.811888
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -71.202121,
+      46.811853
+     ],
+     [
+      -71.199088,
+      46.811884
+     ],
+     [
+      -71.198976,
+      46.811888
+     ],
+     [
+      -71.198744,
+      46.811862
+     ],
+     [
+      -71.196609,
+      46.811582
+     ],
+     [
+      -71.195805,
+      46.811424
+     ],
+     [
+      -71.1943,
+      46.811093
+     ],
+     [
+      -71.188265,
+      46.810665
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 128361,
+    "entrave": "Fermeture",
+    "numeroRoute": "",
+    "localisation": "chemin Saint-Charles entre chemin Des Rivières et rang des Duquettes",
+    "direction": "OUEST et EST",
+    "municipalite": "Notre-Dame-de-Stanbridge",
+    "duree": "Indéterminée",
+    "cause": "Bris de la structure",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Estrie)",
+    "regionsDiffusion": "(1:Estrie)",
+    "enVigueurDepuis": "2026-11-02T10:43:00",
+    "couleurLigne": "#FF0000"
+   },
+   "bbox": [
+    -73.051879,
+    45.157761,
+    -73.050038,
+    45.157793
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -73.051879,
+      45.157761
+     ],
+     [
+      -73.050038,
+      45.157793
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 128369,
+    "entrave": "Restrictions pour certains véhicules lourds, pour une durée indéterminée. Consultez le site Web de la Société des traversiers du Québec.",
+    "numeroRoute": "",
+    "localisation": "L'Isle-aux-Coudres - Saint-Joseph-de-la-Rive (Ouvert)",
+    "direction": "",
+    "municipalite": "",
+    "duree": "",
+    "cause": "",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Québec (Capitale-Nationale))",
+    "regionsDiffusion": "(1:Québec (Capitale-Nationale))",
+    "enVigueurDepuis": "2026-11-02T14:11:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -70.39253,
+    47.42101,
+    -70.364948,
+    47.448537
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -70.364948,
+      47.448537
+     ],
+     [
+      -70.376208,
+      47.436854
+     ],
+     [
+      -70.379619,
+      47.433618
+     ],
+     [
+      -70.382409,
+      47.431179
+     ],
+     [
+      -70.38758,
+      47.426577
+     ],
+     [
+      -70.39253,
+      47.42101
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 128327,
+    "entrave": "Circulation en alternance",
+    "numeroRoute": "",
+    "localisation": "Route Billy-Diamond à la hauteur km 456",
+    "direction": "SUD et NORD",
+    "municipalite": "Eeyou Istchee Baie-James",
+    "duree": "Indéterminée",
+    "cause": "Déversement",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Nord-du-Québec)",
+    "regionsDiffusion": "(1:Nord-du-Québec)",
+    "enVigueurDepuis": "2026-10-31T16:54:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -77.367377,
+    52.686652,
+    -77.367251,
+    52.686908
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -77.367377,
+      52.686652
+     ],
+     [
+      -77.367251,
+      52.686908
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 128359,
+    "entrave": "Fermeture",
+    "numeroRoute": "367",
+    "localisation": "R-367 entre km 76 et km 77",
+    "direction": "SUD et NORD",
+    "municipalite": "Rivière-à-Pierre",
+    "duree": "Du 5 novembre 2026 à 19 h au 9 novembre 2026 à 7 h",
+    "cause": "Travaux",
+    "consequence": "",
+    "detour": "R-367, R-354, R-363",
+    "regions": "(1:Québec (Capitale-Nationale))",
+    "regionsDiffusion": "(2:Québec (Capitale-Nationale),Mauricie—Centre-du-Québec)",
+    "enVigueurDepuis": "2026-11-02T09:45:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -72.227235,
+    46.952848,
+    -72.217102,
+    46.956839
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -72.227235,
+      46.956839
+     ],
+     [
+      -72.224998,
+      46.955221
+     ],
+     [
+      -72.22383,
+      46.954056
+     ],
+     [
+      -72.22286,
+      46.953516
+     ],
+     [
+      -72.221225,
+      46.953093
+     ],
+     [
+      -72.219455,
+      46.952848
+     ],
+     [
+      -72.217102,
+      46.952909
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 128395,
+    "entrave": "",
+    "numeroRoute": "",
+    "localisation": "Limitations de charge sur le traversier L'Isle-aux-Coudres - Saint-Joseph-de-la-Rive pour une durée indéterminée. <br/><br/>Charges maximales pour les véhicules et remorques à usage récréatif:<br/><br/>Essieu simple<br/>À 2 roues: 4800 kg (4,8 tonnes métriques) <br/>À 4 roues: 5100 kg (5,1 tonnes métriques) <br/><br/>Essieux tandem<br/>À 2 roues: 9600 kg (9,6 tonnes métriques)<br/>À 4 roues: 10200 kg (10,2 tonnes métriques) <br/><br/>Consultez le site Web de la Société des traversiers du Québec.",
+    "direction": "OUEST et EST",
+    "municipalite": "",
+    "duree": "",
+    "cause": "",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Québec (Capitale-Nationale))",
+    "regionsDiffusion": "(1:Québec (Capitale-Nationale))",
+    "enVigueurDepuis": "2026-11-03T10:53:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -70.391501,
+    47.420387,
+    -70.365485,
+    47.450824
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -70.390027,
+      47.420545
+     ],
+     [
+      -70.390872,
+      47.420387
+     ],
+     [
+      -70.391501,
+      47.420649
+     ],
+     [
+      -70.365485,
+      47.448886
+     ],
+     [
+      -70.365746,
+      47.44987
+     ],
+     [
+      -70.366096,
+      47.450478
+     ],
+     [
+      -70.366509,
+      47.450824
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "identifiant": 128368,
+    "entrave": "Circulation en alternance",
+    "numeroRoute": "",
+    "localisation": "Rang Saint-Antoine entre R-132 et chemin de l'Église",
+    "direction": "SUD et NORD",
+    "municipalite": "Saint-Gérard-Majella",
+    "duree": "Indéterminée",
+    "cause": "Travaux",
+    "consequence": "",
+    "detour": "",
+    "regions": "(1:Montérégie)",
+    "regionsDiffusion": "(1:Montérégie)",
+    "enVigueurDepuis": "2026-11-02T13:30:00",
+    "couleurLigne": "#FF6A33"
+   },
+   "bbox": [
+    -72.86034,
+    46.005028,
+    -72.838754,
+    46.020014
+   ],
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -72.86034,
+      46.020014
+     ],
+     [
+      -72.838754,
+      46.005028
+     ]
+    ]
+   }
+  }
+ ]
+}

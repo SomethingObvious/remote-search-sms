@@ -4,10 +4,12 @@ import imaplib
 import smtplib
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from . import ai
-from .config import MAIL_KEYS, TWILIO_KEYS, sender_list
+from .android import Phone, PhoneError, make_phone_texter
+from .config import ANDROID_KEYS, MAIL_KEYS, TWILIO_KEYS, sender_list
 from .mail import LoginError, Mailbox, MailboxError, search_terms, servers, smtp_login, split_host
 from .net import SourceError
 from .reply import Answerer
@@ -31,16 +33,23 @@ def senders(config: dict[str, str]) -> Result:
     return Result("Allowed senders", True, ", ".join(sorted(allowed)))
 
 
-def twilio(config: dict[str, str]) -> Result:
-    if not any(config.get(k) for k in TWILIO_KEYS):
-        return Result("Twilio", None, "Not set up.")
-    missing = [k for k in TWILIO_KEYS if not config.get(k)]
+def unfinished(name: str, keys: tuple[str, ...], config: dict[str, str]) -> Result | None:
+    """A result for a part that's empty or half filled in, or None when it's all there."""
+    if not any(config.get(k) for k in keys):
+        return Result(name, None, "Not set up.")
+    missing = [k for k in keys if not config.get(k)]
     if missing:
         return Result(
-            "Twilio",
+            name,
             False,
             f"{' and '.join(missing)} still {'needs' if len(missing) == 1 else 'need'} filling in.",
         )
+    return None
+
+
+def twilio(config: dict[str, str]) -> Result:
+    if gap := unfinished("Twilio", TWILIO_KEYS, config):
+        return gap
     from twilio.base.exceptions import TwilioException
 
     from .sms import twilio_client
@@ -53,6 +62,17 @@ def twilio(config: dict[str, str]) -> Result:
     if not owned:
         return Result("Twilio", False, f"The account has no number {number or '(none set)'}.")
     return Result("Twilio", True, f"Logged in, and {number} belongs to the account.")
+
+
+def android(config: dict[str, str]) -> Result:
+    if gap := unfinished("Android phone", ANDROID_KEYS, config):
+        return gap
+    phone = Phone(config["ANDROID_URL"], config["ANDROID_USER"], config["ANDROID_PASSWORD"])
+    try:
+        phone.inbox(datetime.now(UTC) - timedelta(days=1), limit=1)
+    except PhoneError as exc:
+        return Result("Android phone", False, f"{exc}.")
+    return Result("Android phone", True, f"Reached the phone at {phone.url}, and it lists texts.")
 
 
 def mail(config: dict[str, str]) -> Result:
@@ -110,25 +130,38 @@ def commands(config: dict[str, str]) -> Result:
 TEST_TEXT = "Remote search can text you. Text help to see the commands."
 
 
-def send_test_text(config: dict[str, str]) -> str:
-    """Text PHONE_TO through Twilio, returning the number, or raise ValueError saying why not."""
+def send_test_text(config: dict[str, str], via: str = "") -> str:
+    """Text PHONE_TO, returning the number, or raise ValueError saying why not.
+
+    It goes through ``via``, "Twilio" or "Android phone", or the phone when both are set up.
+    """
     from .sms import make_texter, twilio_client
 
-    phone = config.get("PHONE_TO", "")
-    if not phone:
+    to = config.get("PHONE_TO", "")
+    if not to:
         raise ValueError("PHONE_TO isn't set, so there's nowhere to send a test text.")
-    if not all(config.get(k) for k in TWILIO_KEYS):
-        raise ValueError("Twilio isn't set up, so there's nothing to send a test text with.")
-    texter = make_texter(twilio_client(config), config["TWILIO_PHONE_FROM"])
-    if not texter(phone, TEST_TEXT):
-        raise ValueError(f"Twilio didn't send the test text to {phone}. The log says why.")
-    return phone
+    has_phone = via in ("", "Android phone") and all(config.get(k) for k in ANDROID_KEYS)
+    has_twilio = via in ("", "Twilio") and all(config.get(k) for k in TWILIO_KEYS)
+    if has_phone:
+        name = "The phone"
+        phone = Phone(config["ANDROID_URL"], config["ANDROID_USER"], config["ANDROID_PASSWORD"])
+        texter = make_phone_texter(phone)
+    elif has_twilio:
+        name = "Twilio"
+        texter = make_texter(twilio_client(config), config["TWILIO_PHONE_FROM"])
+    else:
+        what = via or "Neither Twilio nor an Android phone"
+        raise ValueError(f"{what} isn't set up, so there's nothing to send a test text with.")
+    if not texter(to, TEST_TEXT):
+        raise ValueError(f"{name} didn't send the test text to {to}. The log says why.")
+    return to
 
 
 # Named here as well as in each Result, so a check that stops on a bad setting keeps its name.
 CHECKS: tuple[tuple[str, Callable[[dict[str, str]], Result]], ...] = (
     ("Allowed senders", senders),
     ("Twilio", twilio),
+    ("Android phone", android),
     ("Email", mail),
     ("AI answers", model),
     ("Brave Search", brave_search),

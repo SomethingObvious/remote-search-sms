@@ -1,0 +1,31 @@
+{
+ "latitude": 51.041664,
+ "longitude": -114.04166,
+ "generationtime_ms": 0.06628036499023438,
+ "utc_offset_seconds": 0,
+ "timezone": "GMT",
+ "timezone_abbreviation": "GMT",
+ "elevation": 1049.0,
+ "hourly_units": {
+  "time": "iso8601",
+  "sea_level_height_msl": "m"
+ },
+ "hourly": {
+  "time": [
+   "2026-11-03T00:00",
+   "2026-11-03T01:00",
+   "2026-11-03T02:00",
+   "2026-11-03T03:00",
+   "2026-11-03T04:00",
+   "2026-11-03T05:00"
+  ],
+  "sea_level_height_msl": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ]
+ }
+}

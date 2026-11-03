@@ -1,0 +1,189 @@
+{
+ "id": 185640,
+ "product_type": "forecast",
+ "published_time": "2026-11-02T23:30:00+00:00",
+ "expires_time": "2026-11-03T23:30:00+00:00",
+ "avalanche_center": {
+  "id": "CAIC",
+  "name": "Colorado Avalanche Information Center",
+  "url": "https://avalanche.state.co.us/",
+  "city": null,
+  "state": "CO"
+ },
+ "bottom_line": "<p>Snowfall increases significantly as you climb in elevation due to high freezing levels during this storm. At the uppermost elevations, you can trigger avalanches where recent storm snow sits above a weak layer near the surface of the snowpack.</p><p>The most dangerous slopes face north, northeast, and east where winds drift snow onto lee slopes, forming thicker and more connected slabs. As you move down in elevation, avalanches will become smaller and more isolated.</p><p>You can find safer travel options at lower elevations and in wind-sheltered areas.</p>",
+ "danger": [
+  {
+   "lower": 1,
+   "upper": 3,
+   "middle": 2,
+   "valid_day": "current"
+  },
+  {
+   "lower": 1,
+   "upper": 2,
+   "middle": 1,
+   "valid_day": "tomorrow"
+  }
+ ],
+ "forecast_avalanche_problems": [
+  {
+   "rank": 1,
+   "likelihood": "likely",
+   "location": [
+    "southwest upper",
+    "west upper",
+    "northwest upper",
+    "north upper",
+    "northeast upper",
+    "east upper",
+    "southeast upper",
+    "south upper"
+   ],
+   "size": [
+    "1.0",
+    "2.0"
+   ],
+   "name": "Persistent Slab"
+  },
+  {
+   "rank": 2,
+   "likelihood": "likely",
+   "location": [
+    "north upper",
+    "northeast middle",
+    "north middle",
+    "east upper",
+    "northeast upper",
+    "east middle",
+    "southeast upper"
+   ],
+   "size": [
+    "1.0",
+    "2.0"
+   ],
+   "name": "Wind Slab"
+  }
+ ],
+ "forecast_zone": [
+  {
+   "id": 2738,
+   "name": "Sawatch Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "1660315E-6000-4E83-BF42-36B71129C6B1",
+   "config": null
+  },
+  {
+   "id": 2740,
+   "name": "Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "3194EF47-46C9-4132-83C1-D156F9B94123",
+   "config": null
+  },
+  {
+   "id": 2618,
+   "name": "Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "35FB8EF6-E22C-48A4-89FA-6FCD49920345",
+   "config": null
+  },
+  {
+   "id": 2622,
+   "name": "West Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "4696EB06-4EE3-42DD-B53A-29C3735AD595",
+   "config": null
+  },
+  {
+   "id": 2617,
+   "name": "Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "6AFB830C-8B2B-4293-AA7A-C872944C2263",
+   "config": null
+  },
+  {
+   "id": 2743,
+   "name": "Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "7BA4F5A7-6E11-4A81-88FC-0A72429699A0",
+   "config": null
+  },
+  {
+   "id": 2751,
+   "name": "Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "97694259-0F92-4CE6-A4C9-3A69D2C33F35",
+   "config": null
+  },
+  {
+   "id": 2739,
+   "name": "Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "977E9661-AE8E-45A5-9882-EC28C4B149AE",
+   "config": null
+  },
+  {
+   "id": 2750,
+   "name": "West Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "9DFB3103-D688-4AB3-B16D-EE6A20EA25A7",
+   "config": null
+  },
+  {
+   "id": 2619,
+   "name": "West Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "A50331E1-4A1D-4120-8D49-BDBD4BF7914C",
+   "config": null
+  },
+  {
+   "id": 2749,
+   "name": "West Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "C6D989AD-82E5-4DB9-96A4-15F364D6F09B",
+   "config": null
+  },
+  {
+   "id": 2752,
+   "name": "Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "D5746397-17D6-4EE2-837F-6DA0AC4CD2D6",
+   "config": null
+  },
+  {
+   "id": 2741,
+   "name": "Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "DAFC9825-B67E-4FF5-8E6C-4D05CC20E554",
+   "config": null
+  },
+  {
+   "id": 2748,
+   "name": "West Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "028E2912-5D1A-4EC6-A22D-2180A797ECDD",
+   "config": null
+  },
+  {
+   "id": 2742,
+   "name": "Elk Mountains",
+   "url": "https://avalanche.state.co.us/",
+   "state": "CO",
+   "zone_id": "071639C0-9D38-49C1-8AF3-F227A80F447D",
+   "config": null
+  }
+ ]
+}

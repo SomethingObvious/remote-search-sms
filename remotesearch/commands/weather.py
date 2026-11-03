@@ -1,4 +1,4 @@
-"""Weather now, three days of forecast and the sun, from Open-Meteo, with Canadian alerts."""
+"""Weather now, three days of forecast and the sun, from Open-Meteo, with Canadian and US alerts."""
 
 from datetime import datetime
 from typing import Any
@@ -85,9 +85,34 @@ def ec_alerts(hit: dict[str, Any]) -> list[str]:
     return names
 
 
+# The National Weather Service covers the states and the territories, and answers 400
+# for a point anywhere else.
+NWS_PLACES = frozenset({"US", "PR", "VI", "GU", "AS", "MP"})
+
+
+def nws_alerts(hit: dict[str, Any]) -> list[str]:
+    """Names of the National Weather Service alerts in force at a US place."""
+    if hit.get("country_code") not in NWS_PLACES:
+        return []
+    data = net.get_json(
+        "https://api.weather.gov/alerts/active",
+        "the National Weather Service",
+        params={"point": f"{hit['latitude']:.4f},{hit['longitude']:.4f}"},
+    )
+    names: list[str] = []
+    for feature in (data or {}).get("features") or []:
+        props = feature.get("properties") or {}
+        if props.get("status") != "Actual" or props.get("messageType") == "Cancel":
+            continue
+        name = str(props.get("event") or "").lower()
+        if name and name not in names:
+            names.append(name)
+    return names
+
+
 def with_alerts(hit: dict[str, Any], reply: str) -> str:
     try:
-        alerts = ec_alerts(hit)
+        alerts = ec_alerts(hit) + nws_alerts(hit)
     except SourceError:
         return f"{reply}. Couldn't check for weather alerts"
     return f"{reply}. ALERT: {', '.join(alerts)}" if alerts else reply
@@ -121,7 +146,7 @@ def weather(place: str) -> str | None:
 @command(
     "forecast",
     help="forecast <place>: three days of highs, lows, rain and wind from Open-Meteo, plus "
-    "any Environment Canada alerts.",
+    "any alerts in Canada or the US.",
     loose=True,
 )
 def forecast(place: str) -> str | None:

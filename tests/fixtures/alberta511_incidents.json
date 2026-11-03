@@ -1,0 +1,76 @@
+{
+ "recordsTotal": 5,
+ "recordsFiltered": 5,
+ "data": [
+  {
+   "id": 10,
+   "layerName": "Incidents",
+   "roadwayName": "HWY-25",
+   "description": "Traffic advisory on HWY-25 Both Directions Near Township Road 140. Speed Restriction: 80km/hr  Activities: Speed reduction, Rough road, Drive with caution   <div class='cellSpacer'><i><b>Comments:</b></i> Highway 25 between the junction with Highway 526 and Highway 521, north of Turin - deteriorating road conditions and pavement breakup. Expect a speed reduction and drive with caution. </div>",
+   "eventSubType": "trafficAdvisory",
+   "isFullClosure": false,
+   "severity": "None",
+   "direction": "Both",
+   "locationDescription": "Township Road 140",
+   "startDate": "4/27/20, 3:04 PM",
+   "endDate": "11/9/26, 1:00 PM",
+   "lastUpdated": "11/1/26, 8:06 AM"
+  },
+  {
+   "id": 63,
+   "layerName": "Incidents",
+   "roadwayName": "HWY-744",
+   "description": "Landslide on HWY-744 Both Directions Near Range Road 214. Speed Restriction: 50km/hr  Activities: Lane closure, One - lane alt traffic, Speed reduction, Temp traffic signals, Follow Directions   <div class='cellSpacer'><i><b>Comments:</b></i> Highway 744 approximately 400 meters south of Sagitawa Lookout, south of Peace River - road realignment due to a slide in the area. Expect one-lane alternating traffic controlled by temporary traffic signals with a speed reduction to 50 km/h. Obey all posted signage and drive with caution.  </div>",
+   "eventSubType": "Landslide",
+   "isFullClosure": false,
+   "severity": "None",
+   "direction": "Both",
+   "locationDescription": "Range Road 214",
+   "startDate": "6/19/20, 11:59 PM",
+   "endDate": "4/30/27, 1:45 PM",
+   "lastUpdated": "11/1/26, 8:12 AM"
+  },
+  {
+   "id": 94,
+   "layerName": "Incidents",
+   "roadwayName": "HWY-25",
+   "description": "Rough Road on HWY-25 Both Directions from HWY-521 to HWY-526 . Speed Restriction: 80km/hr  Activities: Speed reduction, Rough road, Drive with caution   <div class='cellSpacer'><i><b>Comments:</b></i> Highway 25 between the junction with Highway 521 and Highway 526, north of Turin - deteriorating road conditions and pavement breakup. Expect a speed reduction and drive with caution. </div>",
+   "eventSubType": "roughroad",
+   "isFullClosure": false,
+   "severity": "None",
+   "direction": "Both",
+   "locationDescription": "HWY-521 | HWY-526",
+   "startDate": "4/27/20, 3:00 PM",
+   "endDate": "11/9/26, 1:00 PM",
+   "lastUpdated": "11/1/26, 8:07 AM"
+  },
+  {
+   "id": 95,
+   "layerName": "Incidents",
+   "roadwayName": "HWY-40",
+   "description": "Road Breakup on HWY-40 Both Directions Near Sheep Creek Rd. Speed Restriction: 80km/hr  Activities: Speed reduction   <div class='cellSpacer'><i><b>Comments:</b></i> Highway 40, 34.5 km north of Grande Cache - pavement failure. Bump signs are in place with a speed reduction to 80 km/h.</div>",
+   "eventSubType": "roadBreakup",
+   "isFullClosure": false,
+   "severity": "None",
+   "direction": "Both",
+   "locationDescription": "Sheep Creek Rd",
+   "startDate": "9/4/19, 4:57 PM",
+   "endDate": "7/16/27, 7:00 PM",
+   "lastUpdated": "11/1/26, 8:08 AM"
+  },
+  {
+   "id": 103,
+   "layerName": "Incidents",
+   "roadwayName": "HWY-58",
+   "description": "Traffic advisory on HWY-58 Both Directions 1.07 Km Beyond Imperial Dr.  Activities: Drive with caution   <div class='cellSpacer'><i><b>Comments:</b></i> Advisory: This is a private road and beyond this point is not under the care or control of Alberta Transportation. The road is not regularly maintained and conditions may be unfavorable for travel. Travel at your own risk.  </div>",
+   "eventSubType": "trafficAdvisory",
+   "isFullClosure": false,
+   "severity": "None",
+   "direction": "Both",
+   "locationDescription": "Imperial Dr",
+   "startDate": "1/21/20, 3:24 PM",
+   "endDate": "9/15/27, 8:00 AM",
+   "lastUpdated": "11/1/26, 7:48 AM"
+  }
+ ]
+}

@@ -227,3 +227,12 @@ def test_save_doesnt_wait_for_start_to_connect(app: App) -> None:
         release.set()
         starting.join(5)
     assert app.starting is False
+
+
+def test_send_test_text_uses_the_section_it_was_pressed_in(app: App) -> None:
+    call(app, "/api/save", {"changes": {"PHONE_TO": "+17785551234"}})
+    status, body = call(app, "/api/test-text", {"via": "Android phone"})
+    assert status == 400
+    assert json.loads(body)["error"] == (
+        "Android phone isn't set up, so there's nothing to send a test text with."
+    )
