@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.10"]
+dev = ["pytest>=8", "ruff==0.17.5", "mypy==2.4.1"]
 
 [project.scripts]
 remote-search = "remotesearch.cli:main"

@@ -1,6 +1,5 @@
 """Cleaning up what comes in, telling whether a result matches, and fitting replies into SMS."""
 
-import os
 import re
 import unicodedata
 
@@ -56,9 +55,7 @@ def content_words(text: str) -> set[str]:
 
 
 def _shares_stem(a: str, b: str) -> bool:
-    if a == b:
-        return True
-    return len(os.path.commonprefix([a, b])) >= 4  # purify and purified, not hike and hiking
+    return a == b or (len(a) >= 4 and a[:4] == b[:4])  # purify and purified, not hike and hiking
 
 
 def looks_relevant(query: str, title: str) -> bool:
